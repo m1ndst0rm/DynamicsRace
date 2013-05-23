@@ -149,7 +149,4 @@ DYN_RACE_InitRace =
 			} foreach DYN_RACE_CHECKPOINTS;
 		};
 	} foreach _units;
-	
-	//TODO: move
-	["smoke_start_1", "smoke_start_2"] call DYN_RACE_CreateSmoke;
 };
