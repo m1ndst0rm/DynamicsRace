@@ -5,11 +5,18 @@ Author: m1ndst0rm (joopselen@gmail.com)
 Description:
 Advanced race script for Arma 3. With this script you can easily make your own multiplayer race missions in arma 3.
 It will mainly provide 4 race types:
+<<<<<<< HEAD
 
 * Race without damage
 * Race with damage 
 * Race with driver & gunger without damage (only allowed to shoot in front of vehicle, hits slow down oponents)
 * Race with driver & gunner with damage. 
+=======
+*Race without damage
+*Race with damage 
+*Race with driver & gunger without damage (only allowed to shoot in front of vehicle, hits slow down oponents)
+*Race with driver & gunner with damage. 
+>>>>>>> b9c7f33e35563ac7409c0c2d0b59fb7c7df4e666
 
 Features
 --------
