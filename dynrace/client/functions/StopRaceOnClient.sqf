@@ -29,7 +29,7 @@ DYN_RACE_StopRaceOnClient =
 	sleep 3;
 	_winner_string = call DYN_RACE_GenerateWinnerString;
 
-	_text = format["<t shadow='1' shadowColor='#006600' align='left' size='1'>%1</t>", _winner_string];
+	_text = format["<t shadow='1' shadowColor='#006600' align='left' size='0.5'>%1</t>", _winner_string];
 	[_text, -1, 0, 15, 0.2] spawn BIS_fnc_dynamicText;
 	
 	sleep 15;

@@ -16,6 +16,7 @@ DYN_RACE_InitRace =
 	_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
 	
 	//Randomize all online players for starting positions
+	//TODO: implement new BIS_fnc_arrayShuffle 
 	_random_units = [];
 	_units_count = count _units;
 	for [ {_i = 0}, {_i < _units_count}, {_i = _i + 1}] do
@@ -54,31 +55,29 @@ DYN_RACE_InitRace =
 	{
 		_player = _units select _i;
 		
-		_start_pos = getMarkerPos "DYN_RACE_Marker_Start";
-		_start_pos_dir = markerDir "DYN_RACE_Marker_Start";
+		//_start_pos = getMarkerPos "DYN_RACE_Marker_Start";
+		//_start_pos_dir = markerDir "DYN_RACE_Marker_Start";
+		//_multiplier = floor(_i / 2);
+		//_mod = (_i mod 2);
+		//_pos_differential_side = (_width_between_vehicle / 2) + (0.5 * _vehicle_width);
+		//if(_mod == 1) then
+		//{
+		//	_pos_differential_side = -1 * _pos_differential_side;
+		//};
+		//_pos_differential_forward = -((_vehicle_length * _multiplier) + (_height_between_vehicle * _multiplier));
 		
-		_multiplier = floor(_i / 2);
-		_mod = (_i mod 2);
-		
-		_pos_differential_side = (_width_between_vehicle / 2) + (0.5 * _vehicle_width);
-		if(_mod == 1) then
-		{
-			_pos_differential_side = -1 * _pos_differential_side;
-		};
-		_pos_differential_forward = -((_vehicle_length * _multiplier) + (_height_between_vehicle * _multiplier));
-		
-		_racer_object_location_x = (_start_pos select 0) + ((sin _start_pos_dir) * _pos_differential_forward) + ((sin _start_pos_dir + 90) * _pos_differential_side);
-		_racer_object_location_y = (_start_pos select 1) + ((cos _start_pos_dir) * _pos_differential_forward) + ((cos _start_pos_dir + 90) * _pos_differential_side);
-		_racer_object_location_z = (_start_pos select 2);
+		//_racer_object_location_x = (_start_pos select 0) + ((sin _start_pos_dir) * _pos_differential_forward) + ((sin _start_pos_dir + 90) * _pos_differential_side);
+		//_racer_object_location_y = (_start_pos select 1) + ((cos _start_pos_dir) * _pos_differential_forward) + ((cos _start_pos_dir + 90) * _pos_differential_side);
+		//_racer_object_location_z = (_start_pos select 2);
 		
 		//[format ["Creating race start pos: OldX:%1 OldY:%2 --NewX:%3 NewY:%4", (_start_pos select 0), (_start_pos select 1), _racer_object_location_x, _racer_object_location_y]] call DYN_RACE_Debug;
 		
 		_racer_pos = [_racer_object_location_x, _racer_object_location_y, _racer_object_location_z];
-		//format ["Marker:%1", DYN_RACE_START_POSITIONS select _i]  call DYN_RACE_Debug;
+
 		_start_pos = getMarkerPos (DYN_RACE_START_POSITIONS select _i);
 		_racer_object = createVehicle [DYN_RACE_VEHICLE, _start_pos, [], 0, "NONE"];
 		_racer_object setFuel 0;
-		//TODO: Implement?
+
 		//_racer_object setPos [_racer_object_location_x, _racer_object_location_y, _racer_object_location_z];
 		//_racer_object setDir _start_pos_dir;
 		
@@ -86,13 +85,16 @@ DYN_RACE_InitRace =
 		_racer_object setPos (_start_pos);
 		_racer_object setDir (markerDir (DYN_RACE_START_POSITIONS select _i));
 		
-		
 		_player_id = [_player] call DYN_RACE_GetObjectID;
 		_racer_object_id = [_racer_object] call DYN_RACE_GetObjectID;
 		_lap_times = [];
 		
-		//These lines are to move AI inside vehicle server sided.
-		_player moveInDriver _racer_object;	
+		//Move AI inside vehicle server sided.
+		if !(isPlayer _player) then
+		{
+			_player moveInDriver _racer_object;	
+		};
+		
 		switch (DYN_RACE_TYPE) do
 		{
 			case "SINGLE":
@@ -144,7 +146,6 @@ DYN_RACE_InitRace =
 				_wp = (group _unit) addWaypoint [getMarkerPos _checkpoint, 25]; 
 				_wp setWaypointType "MOVE"; 
 				_wp setWaypointSpeed "FULL"; 
-				//TODO: Test with aware for better ai (safe)
 				_wp setWaypointBehaviour "AWARE";
 			} foreach DYN_RACE_CHECKPOINTS;
 		};

@@ -16,7 +16,6 @@ DYN_RACE_StartRaceOnClient =
 	
 	for [{_i = 10},{_i>0}, {_i=_i-1}] do 
 	{
-		//TODO Examine
 		_text = format["<t align='center' valign='middle' size='1.8'>%1</t>", _i];
 		[_text, -1, -1, 2, 0.2] spawn BIS_fnc_dynamicText;
 		

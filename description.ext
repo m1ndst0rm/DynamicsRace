@@ -1,0 +1,51 @@
+#include "dynrace\client\ui\dynrace.hpp"
+
+class Header
+{
+	gameType = DM; //game type
+	minPlayers = 1; //min # of players the mission supports
+	maxPlayers = 32; //max # of players the mission supports
+};
+
+author="M1nd0";
+OnLoadName = "Race for stratis";
+onLoadMission = "Race for stratis is currently using the DynRace aplha script.";
+OnLoadMissionTime = true;
+
+class CfgMusic 
+{ 
+	tracks[]={}; 
+	class FINAL_MOVE
+	{ 
+		name = "FINAL_MOVE"; sound[] = {"audio\Action_Music.ogg", db+1, 1.0}; 
+	};
+};
+
+class CfgSounds
+{
+	sounds[] = {};
+	class BEEP
+	{
+		name = "BEEP";
+		// filename, volume, pitch
+		sound[] = {"audio\beep.ogg", 1, 1};
+		titles[] = {};
+	};
+	class BEEP_HIGH
+	{
+		name = "BEEP_HIGH";
+		// filename, volume, pitch
+		sound[] = {"audio\beep_high.ogg", 1, 1};
+		titles[] = {};
+	};
+};
+
+//disabledAI = 1;
+respawn = 3;
+respawnDelay = 0;
+respawnDialog = 0;
+showPad = 0;
+//showMap = 0;
+//ShowGPS = 1;
+//briefing = 0;
+//debriefing = 0;
