@@ -27,14 +27,12 @@ class CfgSounds
 	class BEEP
 	{
 		name = "BEEP";
-		// filename, volume, pitch
 		sound[] = {"audio\beep.ogg", 1, 1};
 		titles[] = {};
 	};
 	class BEEP_HIGH
 	{
 		name = "BEEP_HIGH";
-		// filename, volume, pitch
 		sound[] = {"audio\beep_high.ogg", 1, 1};
 		titles[] = {};
 	};

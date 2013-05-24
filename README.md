@@ -37,9 +37,32 @@ Features
 Usage
 -----
 
-Place this lin in your mission's INIT.
-call compile preprocessFile "dynrace\init.sqf";
+Either use the provided example mission or replace it by your own version. 
+Incase you add your own:
+**description.ext**:
 
+	#include "dynrace\client\ui\dynrace.hpp"
+	class CfgSounds
+	{
+		sounds[] = {};
+		class BEEP
+		{
+			name = "BEEP";
+			sound[] = {"audio\beep.ogg", 1, 1};
+			titles[] = {};
+		};
+		class BEEP_HIGH
+		{
+			name = "BEEP_HIGH";
+			sound[] = {"audio\beep_high.ogg", 1, 1};
+			titles[] = {};
+		};
+	};
+
+**init.sqf**:
+
+		call compile preprocessFile "dynrace\init.sqf";
+	
 Usable variables (Place in init):
 
 * VAR_NAME (TYPE:(VALUES):DEFAULT): DESCRIPTION
