@@ -10,7 +10,7 @@ class Header
 
 author="M1nd0";
 OnLoadName = "Race for stratis";
-onLoadMission = "Race for stratis is currently using the DynRace aplha script.";
+onLoadMission = "Race for stratis is currently using the DynRace alpha script.";
 OnLoadMissionTime = true;
 
 class CfgMusic 
