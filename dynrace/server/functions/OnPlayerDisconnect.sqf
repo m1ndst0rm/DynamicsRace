@@ -1,34 +1,32 @@
 /* DYN_RACE_OnPlayerDisconnect: Function which gets excecuted when a player disconnects. 
 * Function checks wheter the player is a racer and removes him from the racers if so.
 * This function is only called on the server
+* TODO: Implement leaving when gunner / driver
 */
-DYN_RACE_OnPlayerDisconnect = 
+"DYN_RACE_OnPlayerDisconnect" call DYN_RACE_Debug;
+_id = _this select 0;
+_name = _this select 1;
+_uid = _this select 2;
+_local_racers = DYN_RACE_Racers;
 {
-	"DYN_RACE_OnPlayerDisconnect" call DYN_RACE_Debug;
-	_id = _this select 0;
-	_name = _this select 1;
-	_uid = _this select 2;
-	_local_racers = DYN_RACE_Racers;
+	_racer = _x;
+	if(netId (_racer select 1) == _uid) then
 	{
-		_racer = _x;
-		if((_racer select 1) == _uid) then
-		{
-			_vehicle = [(_racer select 2)] call DYN_RACE_FindLocalVehicle;
-			deleteVehicle _vehicle;
-			
-			_local_racers = _local_racers - _racer;
-		};
-	} forEach _local_racers;
-	
-	DYN_RACE_Racers = _local_racers;
-	publicVariable "DYN_RACE_Racers";
-	[] call DYN_RACE_OnRacersChanged;
-	
-	//Check if any players left else finish the race.
-	if(count DYN_RACE_Racers == 0) then
-	{
-		DYN_RACE_STATE = "FINISHED";
-		publicVariable "DYN_RACE_STATE";
-		[] call DYN_RACE_OnRaceStateChanged;
+		_vehicle = (_racer select 2);
+		deleteVehicle _vehicle;
+		
+		_local_racers = _local_racers - _racer;
 	};
+} forEach _local_racers;
+
+DYN_RACE_Racers = _local_racers;
+publicVariable "DYN_RACE_Racers";
+[] call DYN_RACE_OnRacersChanged;
+
+//Check if any players left else finish the race.
+if(count DYN_RACE_Racers == 0) then
+{
+	DYN_RACE_STATE = "FINISHED";
+	publicVariable "DYN_RACE_STATE";
+	[] call DYN_RACE_OnRaceStateChanged;
 };

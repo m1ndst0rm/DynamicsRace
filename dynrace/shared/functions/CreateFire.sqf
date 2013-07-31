@@ -9,36 +9,33 @@
 * int: _intensity (0.8 >= x <= 10)
 * string : _markername
 */
-DYN_RACE_CreateFire =
+if (!isServer) exitWith {};
+"DYN_RACE_Fire" call DYN_RACE_Debug;
+
+_markers = [];
+_duraction = _this select 0;
+_intensity = _this select 1;
+for [ {_i = 2}, {_i < count _this}, {_i = _i + 1} ] do
 {
-	if (!isServer) exitWith {};
-	"DYN_RACE_Fire" call DYN_RACE_Debug;
-	
-	_markers = [];
-	_duraction = _this select 0;
-	_intensity = _this select 1;
-	for [ {_i = 2}, {_i < count _this}, {_i = _i + 1} ] do
-    {
-		_markers set [_i, (_this select _i)];
-	};
-	
-	_fires = [];
-	{
-		_marker = _x;
-		if !(_marker in DYN_RACE_FIRES) then
-		{
-			_dummy = "RoadCone" createVehicle _marker;
-			_dummy setPos _marker;
-			_fires set [count _fires, _dummy];
-			DYN_RACE_FIRES set [count DYN_RACE_FIRES, _marker];
-		}
-	} forEach _markers;
-	
-	sleep _duraction;
-	
-	{
-		deleteVehicle _x;
-	} forEach _fires;
-	
-	DYN_RACE_FIRES = DYN_RACE_FIRES - _markers;
+	_markers set [_i, (_this select _i)];
 };
+
+_fires = [];
+{
+	_marker = _x;
+	if !(_marker in DYN_RACE_FIRES) then
+	{
+		_dummy = "RoadCone" createVehicle _marker;
+		_dummy setPos _marker;
+		_fires set [count _fires, _dummy];
+		DYN_RACE_FIRES set [count DYN_RACE_FIRES, _marker];
+	}
+} forEach _markers;
+
+sleep _duraction;
+
+{
+	deleteVehicle _x;
+} forEach _fires;
+
+DYN_RACE_FIRES = DYN_RACE_FIRES - _markers;

@@ -1,11 +1,9 @@
 //Server init
-DYN_RACE_EXPLOSIONS = [];
-DYN_RACE_MAP_VEHICLES = [];
-DYN_RACE_SMOKE_GRENADES = [];
-DYN_RACE_FIRES = [];
-DYN_RACE_VOTES = [];
+[] call DYN_RACE_PrepareRace;
+
 onPlayerDisconnected "[_id,_name, _uid] spawn DYN_RACE_OnPlayerDisconnect;";
 
+DYN_RACE_LOCK_TEAMS = false;
 publicVariable "DYN_RACE_STATE";
 [] call DYN_RACE_OnRaceStateChanged;
 publicVariable "DYN_RACE_RACERS";

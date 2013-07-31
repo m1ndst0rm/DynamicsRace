@@ -15,6 +15,59 @@ class DYN_RscText {
 	linespacing = 1;
 };
 
+class DYN_MCListBox {
+	idc = -1;
+	type = 102;
+	style = 0;
+	font = "PuristaMedium";
+	x = 0;
+	y = 0;
+	w = .2;
+	h = .4;
+	// number of columns used, and their left positions 
+	// if using side buttons, space has to be reserved for those,
+	// at a width of roughly 120% of rowHeight
+	columns[] = {}; 
+	// height of each row
+	sizeEx = 0.03; 
+	drawSideArrows = 0; 
+	
+	colorSelect[] = {0, 0, 0, 1};
+	colorText[] = {1, 1, 1, 1};
+	colorBackground[] = {0.28,0.28,0.28,0.28};
+	colorSelect2[] = {0, 0, 0, 1};
+	colorSelectBackground[] = {0.95, 0.95, 0.95, 0.5};
+	colorSelectBackground2[] = {0.9, 0.9, 0.9, 0};
+	colorscrollbar[] = {0.2, 0.2, 0.2, 1};
+	arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+	arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+	wholeHeight = 0.45;
+	rowHeight = 0.03;
+	color[] = {0.7, 0.7, 0.7, 1};
+	colorActive[] = {0,0,0,1};
+	colorDisabled[] = {0,0,0,0.3};
+	soundSelect[] = {"",0.1,1};
+	soundExpand[] = {"",0.1,1};
+	soundCollapse[] = {"",0.1,1};
+	maxHistoryDelay = 1;
+	autoScrollSpeed = -1;
+	autoScrollDelay = 5;
+	autoScrollRewind = 0;
+	
+	idcLeft = 0;
+	idcRight = 0;
+	
+	class ScrollBar {
+		color[] = {1, 1, 1, 0.6};
+		colorActive[] = {1, 1, 1, 1};
+		colorDisabled[] = {1, 1, 1, 0.3};
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+	};
+};
+
 class DYN_RscListBox {
 	style = 16;
 	idc = -1;
@@ -32,7 +85,7 @@ class DYN_RscListBox {
 	arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
 	arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
 	wholeHeight = 0.45;
-	rowHeight = 0.04;
+	rowHeight = 0.03;
 	color[] = {0.7, 0.7, 0.7, 1};
 	colorActive[] = {0,0,0,1};
 	colorDisabled[] = {0,0,0,0.3};
@@ -173,24 +226,78 @@ class DYN_RscButtonMenu : DYN_RscShortcutButton {
 	};
 };
 
+class DYN_TeamSelectionDiag
+{
+	idd = 4010;
+	name = "Team Selection";
+	movingEnable = false;
+	enableSimulation = true;
+	onLoad = "[] spawn DYN_RACE_TeamSelectionDialogInit;";
+	
+	class controls
+	{
+		class TeamList : DYN_RscListBox
+		{
+			idc = 4011;
+			text = "";
+			sizeEx = 0.030;
+			onLBSelChanged = "[] spawn DYN_RACE_TeamSelectionDialogTeamSelectionChanged;";
+			
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2);
+			w = 0.275; h = 0.340;
+		};
+		
+		class TeamText : DYN_RscText
+		{
+			idc = 4012;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "Team Selection";
+			sizeEx = 0.04;
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2) - 0.05;
+			w = 0.275 * 2; h = 0.04;
+		};
+		
+		class TeamRoleList : DYN_RscListBox
+		{
+			idc = 4013;
+			text = "";
+			sizeEx = 0.030;
+			onLBSelChanged = "[] spawn DYN_RACE_TeamSelectionDialogRoleChanged;";
+			
+			x = 0.5; y = 0.5 - (0.340 /2);
+			w = 0.275; h = 0.04 + 0.340 - 0.04;
+		};
+		
+		class ButtonChoose : DYN_RscButtonMenu 
+		{
+			idc = -1;
+			text = "Join role";
+			onButtonClick = "[] spawn DYN_RACE_TeamSelectionDialogJoinButton;";
+			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
+			w = 0.20;
+			h = 0.04;
+		};
+	};
+};
+
 class DYN_Diag 
 {
 	idd = 4000;
 	name= "Dynamics Race Vote";
 	movingEnable = false;
 	enableSimulation = true;
-	onLoad = "[] spawn DYN_RACE_StartDialogInit";
+	onLoad = "[] spawn DYN_RACE_VoteDialogInit";
 
 	class controls 
 	{
-		class RaceWagonList : DYN_RscListBox
+		class VoteList : DYN_RscListBox
 		{
 			idc = 4001;
 			text = "";
 			sizeEx = 0.030;
-			onLBSelChanged = "";
+			onLBSelChanged = "[] spawn DYN_RACE_VoteDialogSelectChanged;";
 			
-			x = 0.5 - (0.275 / 2); y = 0.5 - (0.340 /2);
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2);
 			w = 0.275; h = 0.340;
 		};
 		
@@ -198,21 +305,112 @@ class DYN_Diag
 		{
 			idc = -1;
 			text = "Vote";
-			onButtonClick = "[] spawn DYN_RACE_StartDialogStartButton;";
-			x = 0.5 - (0.275 / 2) + (0.075 / 2); y = 0.5 + (0.340 /2);
+			onButtonClick = "[] spawn DYN_RACE_VoteDialogVoteButton;";
+			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
 			w = 0.20;
 			h = 0.04;
 		};
 		
-		class vasText : DYN_RscText
+		class VoteText : DYN_RscText
 		{
-			idc = -1;
+			idc = 4002;
 			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
-			text = "Vehicle vote";
+			text = "Vote";
 			sizeEx = 0.04;
-			x = 0.5 - (0.275 / 2); y = 0.5 - (0.340 /2) - 0.05;
-			w = 0.275; h = 0.04;
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2) - 0.05;
+			w = 0.275 * 2; h = 0.04;
+		};
+		
+		class VoteInfo :DYN_RscText
+		{
+			idc = 4003;
+			style = ST_LEFT;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "Click an item to get information about it.";
+			sizeEx = 0.02;
+			x = 0.5; y = 0.5 - (0.340 /2);
+			w = 0.275; h = 0.340;
 		};
 	};
 };
 
+class DYN_ScoreBoardDiag
+{
+	idd = 4020;
+	name= "ScoreBoard";
+	movingEnable = false;
+	enableSimulation = true;
+	onLoad = "[] spawn DYN_RACE_WinnerDialogInit";
+	
+	class controls 
+	{
+		class ScoreBoard : DYN_MCListBox
+		{
+			idc = 4021;
+			text = "";
+			sizeEx = 0.030;
+			
+			columns[] = {0.03, 0.1 ,0.8, .97}; 
+			
+			x = 0.5 - 0.275 - (0.275 / 2); y = 0.5 - (0.340);
+			w = 0.275 * 3; h = 0.340 * 2;
+		};
+		
+		class ScoreBoardText : DYN_RscText
+		{
+			idc = -1;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "Scoreboard";
+			sizeEx = 0.04;
+			x = 0.5 - 0.275 - (0.275 / 2); y = 0.5 - (0.340) - 0.05;
+			w = 0.275  * 3; h = 0.04;
+		};
+		
+		class ButtonClose : DYN_RscButtonMenu 
+		{
+			idc = -1;
+			text = "Close";
+			onButtonClick = "closeDialog 0";
+			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340);
+			w = 0.20;
+			h = 0.04;
+		};
+	};
+};
+
+class DYN_CommanderDiag
+{
+	idd = 4030;
+	name= "ScoreBoazrd";
+	movingEnable = false;
+	enableSimulation = true;
+	
+	
+	class controls 
+	{
+		class BtnAction1 : DYN_RscButtonMenu 
+		{
+			idc = 4031;
+			text = "BtnAction1";
+			x = 0.1; y = 0.1;
+			w = 0.20;
+			h = 0.04;
+		};
+		class BtnAction2 : DYN_RscButtonMenu 
+		{
+			idc = 4032;
+			text = "BtnAction2";
+			x = 0.1; y = 0.1 + 0.05;
+			w = 0.20;
+			h = 0.04;
+		};
+		class BtnAction3 : DYN_RscButtonMenu 
+		{
+			idc = 4032;
+			text = "BtnAction3";
+			x = 0.1; y = 0.1 + 0.1;
+			w = 0.20;
+			h = 0.04;
+		};
+	};
+};

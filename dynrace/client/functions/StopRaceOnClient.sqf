@@ -2,12 +2,12 @@
 * This function should NOT be called directly. Internal function.
 *
 */
-DYN_RACE_StopRaceOnClient =
+"DYN_RACE_StopRaceOnClient" call DYN_RACE_Debug;
+
+//Incase player hasn't stopped (didn't finish the race).
+if(player getVariable ["isDriver",false]) then
 {
-	"DYN_RACE_StopRaceOnClient" call DYN_RACE_Debug;
-	
-	//Incase player hasn't stopped (didn't finish the race).
-	[vehicle _player] spawn
+	[vehicle player] spawn
 	{
 		_vehicle = _this select 0;
 		_speed = speed _vehicle;
@@ -25,31 +25,24 @@ DYN_RACE_StopRaceOnClient =
 		_vehicle setFuel 0;
 		_vehicle engineOn false;
 	};
-	
-	sleep 3;
-	_winner_string = call DYN_RACE_GenerateWinnerString;
-
-	_text = format["<t shadow='1' shadowColor='#006600' align='left' size='0.5'>%1</t>", _winner_string];
-	[_text, -1, 0, 15, 0.2] spawn BIS_fnc_dynamicText;
-	
-	sleep 15;
-	
-	DYN_RACE_JIPPLAYER = false;
-	
-	[] spawn DYN_RACE_DisableSpectator;
-	if((vehicle player) != player) then
-	{
-		_vehicle = (vehicle player);
-		//_vehicle enableSimulation true;
-		_vehicle setFuel 0;
-		sleep 0.5;
-		moveOut player;
-	};
-	//player enableSimulation true;
-	_pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
-	player setPos _pos;
-	player setcaptive false;
-	hint "";
-	sleep 10;
-	systemChat "Pres 'v' to open the vote dialog.";
 };
+sleep 3;
+
+[] spawn DYN_RACE_SPEC_DisableSpectator;
+sleep 1;
+if((vehicle player) != player) then
+{
+	moveOut player;
+};
+_pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
+player setPos _pos;
+
+hint "";
+
+disableSerialization;
+createDialog "DYN_ScoreBoardDiag";
+
+waitUntil {DYN_RACE_STATE == "IDLE"};
+
+DYN_RACE_JIPPLAYER = false;
+player setVariable ["JIPPLAYER", false, true];

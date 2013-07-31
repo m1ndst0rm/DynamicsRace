@@ -3,10 +3,7 @@
 *
 * Example: ["Test"] call DYN_RACE_Debug;
 */
-DYN_RACE_Debug =
+if(DYN_RACE_DEBUG_ENABLED) then
 {
-	if(DYN_RACE_DEBUG_ENABLED) then
-	{
-		diag_log _this select 0;
-	};
+	diag_log _this select 0;
 };
