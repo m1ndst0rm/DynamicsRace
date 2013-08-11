@@ -31,7 +31,7 @@ class CfgSounds
 	};
 };
 
-//disabledAI = 1;
+disabledAI = 1;
 respawn = 3;
 respawnDelay = 0;
 respawnDialog = 0;

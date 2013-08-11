@@ -28,7 +28,10 @@ publicVariable "DYN_RACE_Racers";
 //Check if any players left else finish the race.
 if(count DYN_RACE_Racers == 0) then
 {
-	DYN_RACE_STATE = "FINISHED";
-	publicVariable "DYN_RACE_STATE";
-	[] call DYN_fnc_OnRaceStateChanged;
+	if(DYN_RACE_STATE != "IDLE") then
+	{
+		DYN_RACE_STATE = "FINISHED";
+		publicVariable "DYN_RACE_STATE";
+		[] call DYN_fnc_OnRaceStateChanged;
+	};
 };

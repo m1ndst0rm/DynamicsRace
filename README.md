@@ -115,6 +115,10 @@ A: Comming soon. Because this script is in aplha stage I am currently not making
 Q: Are you looking for people to help out
 A: Yes. If you are an experienced scripter, moddel or modeller you are welcome to join the club.
 
+Looking for
+-----------
+Scripters, modders, modellers & people with decent rigs to shoot some nice fotage.
+
 Terms of Use
 ------------
 http://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -122,6 +126,7 @@ If you are planning on modding/adding contents to this mod please contact me fir
 
 Made possible by / credits:
 ---------------------------
-* Kronzky: String functions
 * Team Dynamics: Testing
-* JoSchaap, JW Custom & Killzone_Kid and many others from arma3 scripting forum: Testing/troubleshooting and help with scripting.
+* Killzone_Kid: For his help with tons of things. Without him I would have spend alot more time creating this script.
+* Kronzky: String functions
+* JoSchaap, JW Custom and many others from arma3 scripting forum: Testing/troubleshooting and help with scripting.

@@ -196,7 +196,7 @@ _playerToCreateVehiclesFor = _first + _second;
 	};
 	if(_player getVariable ["isMouse", false]) then
 	{
-		_vehicleClass = DYN_RACE_MOUSE_CLASS;
+		_vehicleClass = DYN_RACE_OFFROAD_CLASS;
 	};
 	if(_player getVariable ["isCop", false] || _player getVariable ["isCat", false]) then
 	{
@@ -244,7 +244,7 @@ _playerToCreateVehiclesFor = _first + _second;
 		_teamNumber = _player getVariable "teamNumber";
 		_colorNumber = _teamNumber;
 		_extras = 0;
-		while {_colorNumber > 6 } do
+		while {_colorNumber > 5 } do
 		{
 			_colorNumber = _colorNumber - 6;
 			_extras = _extras + 1;

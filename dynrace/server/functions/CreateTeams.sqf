@@ -156,7 +156,7 @@ switch (DYN_RACE_TYPE) do
 				//_teamName = "Commanders";
 				//_team = [_teamName, [["COMMANDER", 2,[]]],[]];
 				//DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
-				_teamName = "Spectators";
+				_teamName = "Commanders";
 				_team = [_teamName, [["COMMANDER", _unevenPlayers,[]]],[]];
 				DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 			};
