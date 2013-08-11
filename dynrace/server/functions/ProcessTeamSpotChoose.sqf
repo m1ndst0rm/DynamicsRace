@@ -87,21 +87,21 @@ if(DYN_RACE_STATE == "IDLE") then
 				{
 					[] call DYN_fnc_OnChatChange;
 				};
-				sleep 2;
+				sleep 15;
 				DYN_RACE_CHAT = "15 seconds to choose a team and role.";
 				publicVariable "DYN_RACE_CHAT";
 				if!(isDedicated) then
 				{
 					[] call DYN_fnc_OnChatChange;
 				};
-				sleep 2;
+				sleep 10;
 				DYN_RACE_CHAT = "5 seconds to choose a team and role.";
 				publicVariable "DYN_RACE_CHAT";
 				if!(isDedicated) then
 				{
 					[] call DYN_fnc_OnChatChange;
 				};
-				sleep 1;
+				sleep 5;
 				[] call DYN_fnc_StartRace;
 			};
 		};
