@@ -1,13 +1,14 @@
 /* DYN_RACE_Smoke: Creates smoke on given mark names
 * Creates smoke on given marker(s) but limits the smoke to 1 per marker per 15 seconds (mulitple players hitting a trigger wont create multiple smoke grenades)
 *
-* Example: ["marker_1"] call DYN_RACE_CreateSmoke;
-* Example: ["marker_1", "marker_2", ...] call DYN_RACE_CreateSmoke;
+* Example: ["marker_1"] call DYN_fnc_CreateSmoke;
+* Example: ["marker_1", "marker_2", ...] call DYN_fnc_CreateSmoke;
 * params:
 * string : _markername
 */
 if (!isServer) exitWith {};
-"DYN_RACE_Smoke" call DYN_RACE_Debug;
+private ["_markername","_markers","_i","_marker"];
+"DYN_RACE_Smoke" call BIS_fnc_log;
 
 _markers = [];
 

@@ -1,4 +1,4 @@
-/* DYN_RACE_GetTeamName: return team name with format options
+/* DYN_fnc_GetTeamName: return team name with format options
 *	Param1: Teamno or team
 *	Param2 (optional): format option
 *			-0: Team 1: Player1, Player2, ....

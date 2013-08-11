@@ -7,6 +7,7 @@
 * Returns:
 * _unique_object_id: Unique object ID equal on all clients and server.
 */
+private ["_object","_unique_object_id"];
 DYN_RACE_GetObjectID =
 {
 	_object = _this select 0;

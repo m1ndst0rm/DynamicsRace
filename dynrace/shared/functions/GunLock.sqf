@@ -1,8 +1,9 @@
-/* DYN_RACE_GunLock: Lock the gunners gun of a single vehicle or a group.
+/* DYN_fnc_GunLock: Lock the gunners gun of a single vehicle or a group.
 * 
-* Example1: _vehicle call DYN_RACE_GunLock;
-* Example2: thislist call DYN_RACE_GunLock; //Trigger
+* Example1: _vehicle call DYN_fnc_GunLock;
+* Example2: thislist call DYN_fnc_GunLock; //Trigger
 */
+private ["_vehicle","_magNames","_ammoLeft","_magName"];
 if(typeName _this == "ARRAY") then
 {
 	{
@@ -19,14 +20,14 @@ else
 //Only "Lock" the gun if it's not yet locked (else the gun's ammo will be set to zero).
 if !(_vehicle getVariable ["gunLocked", false]) then
 {	
-	_magNames = _vehicle magazinesTurret [0];
-	_ammoLeft = (_vehicle ammo (currentWeapon _vehicle));
-	_vehicle setVariable ["magNames", _magNames, true];	
-	_vehicle setVariable ["lastMagCount", _ammoLeft, true];	
+	_magazineInfo = magazinesAmmoFull _vehicle;
+
+	_vehicle setVariable ["magazineInfo", _magazineInfo, true];
 	_vehicle setVariable ["gunLocked", true, true];	
+	
 	_vehicle setVehicleAmmo 0;
 	{
 		_magName = _x;
-		_vehicle removeMagazinesTurret [_magName,[0]]; 
-	} forEach _magNames;
+		_vehicle removeMagazinesTurret [_magName select 0,[0]]; 
+	} forEach _magazineInfo;
 };

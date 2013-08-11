@@ -1,6 +1,7 @@
+private ["_allMarkersFound","_i","_marker_name","_checkpoint","_taskname","_checkpointTask","_tArea","_y","_angle","_isRectangle","_tPos","_tPosX","_tPosY","_markerstr"];
 DYN_RACE_CHECKPOINTS = [];
 _allMarkersFound = false;
-_i = 6;
+_i = 1;
 while { !(_allMarkersFound) } do
 {
 	_marker_name = format ["DYN_Checkpoint_%1", _i];
@@ -22,6 +23,11 @@ while { !(_allMarkersFound) } do
 if!(isDedicated) then
 {
 	_i = 1;
+	if(DYN_RACE_LAPS == 1) then
+	{
+		_i = 0;
+	};
+	
 	{
 		_checkpoint = _x;
 		_taskname = format["Checkpoint: %1",_i]; 
@@ -57,12 +63,5 @@ if(_isRectangle) then
 }
 else
 {
-	if!(isDedicated) then
-	{
-		hintC "Finish triger must be a rectangle.";
-	}
-	else
-	{
-		diag_log "!!!WARNING:FINISH LINE TRIGER MUST BE RACTANGLE!!!";
-	};
+	["The finish line trigger must be a rectable."] call BIS_fnc_error;
 };

@@ -15,6 +15,24 @@ class DYN_RscText {
 	linespacing = 1;
 };
 
+class DYN_RscStructuredText {
+	x = 0;
+	y = 0;
+	h = 0.037;
+	w = 0.3;
+	type = 13;
+	style = 0;
+	shadow = 1;
+	colorShadow[] = {0, 0, 0, 0.5};
+	font = "PuristaMedium";
+	SizeEx = "(			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1)";
+	size = 0.03;
+	text = "";
+	colorText[] = {1, 1, 1, 1.0};
+	colorBackground[] = {0, 0, 0, 0};
+	linespacing = 1;
+};
+
 class DYN_MCListBox {
 	idc = -1;
 	type = 102;
@@ -232,7 +250,8 @@ class DYN_TeamSelectionDiag
 	name = "Team Selection";
 	movingEnable = false;
 	enableSimulation = true;
-	onLoad = "[] spawn DYN_RACE_TeamSelectionDialogInit;";
+	onLoad = "[] spawn DYN_fnc_TeamSelectionDialogInit;uiNamespace setVariable ['DYN_TEAMDIAG', _this select 0];";
+	onUnLoad = "uiNamespace setVariable ['DYN_TEAMDIAG', nil]";
 	
 	class controls
 	{
@@ -241,7 +260,7 @@ class DYN_TeamSelectionDiag
 			idc = 4011;
 			text = "";
 			sizeEx = 0.030;
-			onLBSelChanged = "[] spawn DYN_RACE_TeamSelectionDialogTeamSelectionChanged;";
+			onLBSelChanged = "[] spawn DYN_fnc_TeamSelectionDialogTeamSelectionChanged;";
 			
 			x = 0.5 - (0.275); y = 0.5 - (0.340 /2);
 			w = 0.275; h = 0.340;
@@ -262,7 +281,7 @@ class DYN_TeamSelectionDiag
 			idc = 4013;
 			text = "";
 			sizeEx = 0.030;
-			onLBSelChanged = "[] spawn DYN_RACE_TeamSelectionDialogRoleChanged;";
+			onLBSelChanged = "[] spawn DYN_fnc_TeamSelectionDialogRoleChanged;";
 			
 			x = 0.5; y = 0.5 - (0.340 /2);
 			w = 0.275; h = 0.04 + 0.340 - 0.04;
@@ -272,7 +291,7 @@ class DYN_TeamSelectionDiag
 		{
 			idc = -1;
 			text = "Join role";
-			onButtonClick = "[] spawn DYN_RACE_TeamSelectionDialogJoinButton;";
+			onButtonClick = "[] spawn DYN_fnc_TeamSelectionDialogJoinButton;";
 			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
 			w = 0.20;
 			h = 0.04;
@@ -286,8 +305,9 @@ class DYN_Diag
 	name= "Dynamics Race Vote";
 	movingEnable = false;
 	enableSimulation = true;
-	onLoad = "[] spawn DYN_RACE_VoteDialogInit";
-
+	onLoad = "[] spawn DYN_fnc_VoteDialogInit;uiNamespace setVariable ['DYN_VOTEDIAG', _this select 0];";
+	onUnLoad = "uiNamespace setVariable ['DYN_VOTEDIAG', nil]";
+	
 	class controls 
 	{
 		class VoteList : DYN_RscListBox
@@ -295,7 +315,7 @@ class DYN_Diag
 			idc = 4001;
 			text = "";
 			sizeEx = 0.030;
-			onLBSelChanged = "[] spawn DYN_RACE_VoteDialogSelectChanged;";
+			onLBSelChanged = "[] spawn DYN_fnc_VoteDialogSelectChanged;";
 			
 			x = 0.5 - (0.275); y = 0.5 - (0.340 /2);
 			w = 0.275; h = 0.340;
@@ -305,7 +325,7 @@ class DYN_Diag
 		{
 			idc = -1;
 			text = "Vote";
-			onButtonClick = "[] spawn DYN_RACE_VoteDialogVoteButton;";
+			onButtonClick = "[] spawn DYN_fnc_VoteDialogVoteButton;";
 			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
 			w = 0.20;
 			h = 0.04;
@@ -321,7 +341,7 @@ class DYN_Diag
 			w = 0.275 * 2; h = 0.04;
 		};
 		
-		class VoteInfo :DYN_RscText
+		class VoteInfo : DYN_RscStructuredText
 		{
 			idc = 4003;
 			style = ST_LEFT;
@@ -340,7 +360,8 @@ class DYN_ScoreBoardDiag
 	name= "ScoreBoard";
 	movingEnable = false;
 	enableSimulation = true;
-	onLoad = "[] spawn DYN_RACE_WinnerDialogInit";
+	onLoad = "[] spawn DYN_fnc_WinnerDialogInit;uiNamespace setVariable ['DYN_SCOREBOARDDIAG', _this select 0];";
+	onUnLoad = "uiNamespace setVariable ['DYN_SCOREBOARDDIAG', nil]";
 	
 	class controls 
 	{
@@ -381,36 +402,195 @@ class DYN_ScoreBoardDiag
 class DYN_CommanderDiag
 {
 	idd = 4030;
-	name= "ScoreBoazrd";
-	movingEnable = false;
+	name= "Commander diag";
+	movingEnable = true;
 	enableSimulation = true;
-	
-	
+	onLoad = "[] spawn DYN_fnc_ComActionDialogInit;uiNamespace setVariable ['DYN_COMACTIONSDIAG', _this select 0];";
+	onUnLoad = "uiNamespace setVariable ['DYN_COMACTIONSDIAG', nil]";
+
 	class controls 
 	{
-		class BtnAction1 : DYN_RscButtonMenu 
+		class ActionList : DYN_RscListBox
 		{
 			idc = 4031;
-			text = "BtnAction1";
-			x = 0.1; y = 0.1;
+			text = "";
+			sizeEx = 0.030;
+			onLBSelChanged = "[] spawn DYN_fnc_ComSelectedActionChanged;";
+			
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2);
+			w = 0.275; h = 0.340;
+		};
+		
+		class ButtonClose : DYN_RscButtonMenu 
+		{
+			idc = -1;
+			text = "Select action";
+			onButtonClick = "[] spawn DYN_fnc_ComSelectAction;";
+			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
 			w = 0.20;
 			h = 0.04;
 		};
-		class BtnAction2 : DYN_RscButtonMenu 
+		
+		class ActionText : DYN_RscText
 		{
 			idc = 4032;
-			text = "BtnAction2";
-			x = 0.1; y = 0.1 + 0.05;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "Vote";
+			sizeEx = 0.04;
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2) - 0.05;
+			w = 0.275 * 2; h = 0.04;
+		};
+		
+		class ActionInfo : DYN_RscStructuredText
+		{
+			idc = 4033;
+			style = ST_LEFT;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "Click an action to get information about it.";
+			sizeEx = 0.02;
+			x = 0.5; y = 0.5 - (0.340 /2);
+			w = 0.275; h = 0.340;
+		};
+	};
+};
+
+class DYN_HELP
+{
+	idd = 4060;
+	name= "Hepl";
+	movingEnable = false;
+	enableSimulation = true;
+	onLoad = "uiNamespace setVariable ['DYN_HELPDIAG', _this select 0];";
+	onUnLoad = "uiNamespace setVariable ['DYN_HELPDIAG', nil]";
+
+	class controls 
+	{
+		class ButtonClose : DYN_RscButtonMenu 
+		{
+			idc = -1;
+			text = "Close";
+			onButtonClick = "(uiNamespace getVariable 'DYN_HELPDIAG') closeDisplay 0;";
+			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
 			w = 0.20;
 			h = 0.04;
 		};
-		class BtnAction3 : DYN_RscButtonMenu 
+		
+		class ActionText : DYN_RscText
 		{
-			idc = 4032;
-			text = "BtnAction3";
-			x = 0.1; y = 0.1 + 0.1;
-			w = 0.20;
-			h = 0.04;
+			idc = -1;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "Help";
+			sizeEx = 0.04;
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2) - 0.05;
+			w = 0.275 * 2; h = 0.04;
+		};
+		
+		class ActionInfo : DYN_RscStructuredText
+		{
+			idc = 4061;
+			style = ST_LEFT;
+			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+			text = "";
+			sizeEx = 0.02;
+			x = 0.5 - (0.275); y = 0.5 - (0.340 /2);
+			w = 0.275 * 2; h = 0.340;
+		};
+	};
+};
+
+class RscPicture
+{
+	access = 0;
+	type = 0;
+	idc = -1;
+	style = 48;//ST_PICTURE
+	colorBackground[] = {0,0,0,0};
+	colorText[] = {1,1,1,1};
+	font = "TahomaB";
+	sizeEx = 0;
+	lineSpacing = 0;
+	text = "";
+	fixedWidth = 0;
+	shadow = 0;
+};
+
+class rscTitles
+{
+	class DYN_COMTARGETDiag
+	{
+		idd = 4040;
+		name= "Commander targetter";
+		movingEnable = false;
+		enableSimulation = true;
+		duration = 9999999;
+		fadeIn = 0;
+		fadeOut = 0;
+		controlsBackground[] = {};
+      	objects[] = {};
+		onLoad = "uiNamespace setVariable ['DYN_COMTARGETDIAG', _this select 0];";
+		onUnLoad = "uiNamespace setVariable ['DYN_COMTARGETDIAG', nil]";
+		class controls
+		{
+			class Picture: RscPicture
+			{
+				idc = 4041;
+				text = "dynrace\ui\commander\Target_ca.paa";
+				x = 0.475;
+				y = 0.475;
+				w = 0.05;
+				h = 0.05;
+				//colorText[] = {1,1,1,1.0};// whatever gives you a thrill 
+				colorText[] = {1, 0, 0, 1};
+				colorBackground[] = {0, 0, 0, 0};
+			};
+		};
+	};
+	
+	class DYN_InfoDiag
+	{
+		idd = 4050;
+		name= "Race diag";
+		movingEnable = false;
+		enableSimulation = true;
+		duration = 9999999;
+		fadeIn = 0;
+		fadeOut = 0;
+		onLoad = "uiNamespace setVariable ['DYN_INFODIAG', _this select 0];";
+		onUnLoad = "uiNamespace setVariable ['DYN_INFODIAG', nil]";
+		class controls
+		{
+			class RaceInfo : DYN_RscStructuredText
+			{
+				idc = 4051;
+				style = ST_LEFT;
+				colorBackground[] = {0,0,0,0.5};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+				text = "";
+				sizeEx = 0.08;
+				x = safezoneX + safezoneW - 0.3; y = 0;
+				w = 0.25; h = 0.5;
+			};
+			
+			class Position : DYN_RscStructuredText
+			{
+				idc = 4052;
+				style = ST_LEFT;
+				colorBackground[] = {0,0,0,0};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+				text = "";
+				sizeEx = 0.08;
+				x = safezoneX + 0.35; y = safezoneY + 0.02;
+				w = 0.3; h = 0.1;
+			};
+			
+			class Time : DYN_RscStructuredText
+			{
+				idc = 4053;
+				style = ST_LEFT;
+				colorBackground[] = {0,0,0,0,};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+				text = "";
+				sizeEx = 0.5;
+				x = safezoneX + 0.35; y = safezoneY + 0.1;
+				w = 0.1; h = 0.1;
+			};
 		};
 	};
 };

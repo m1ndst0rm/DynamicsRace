@@ -1,9 +1,10 @@
-/* DYN_RACE_PlayerFinished: Trigger which should be called from editor
+/* DYN_fnc_PlayerFinished: Trigger which should be called from editor
 * Trigger to place over the finish line.
 *
 * Example: [thislist] call DYN_RACE_Finish;
 */
-"DYN_RACE_PlayerFinished" call DYN_RACE_Debug;
+private ["_list","_local_racers","_racer_count","_i","_racer","_player","_currentCheckpoint","_currentCheckpointId","_lap_times","_time","_teamNumber","_players","_team","_finished_players","_finishedCount","_caughtCount","_doneCount"];
+"DYN_fnc_PlayerFinished" call BIS_fnc_log;
 if(DYN_RACE_STATE != "ONGOING") exitWith { };
 if!(isServer) exitWith { };
 
@@ -21,16 +22,11 @@ _i= 0; for "_i" from 0 to (_racer_count - 1) do
 		{
 			//Only save finish time if it's SINGLE race, or cat, robber 
 			if(DYN_RACE_TYPE == "SINGLE" ||  _player getVariable ["isMouse", false] || _player getVariable ["isRobber", false] || DYN_RACE_TYPE == "DUAL" || DYN_RACE_TYPE == "TEAM" || DYN_RACE_TYPE == "TEAM3") then
-			{
-				//[format ["Racer '%1' finished", name _player]] call DYN_RACE_Debug;
-				
-
-
+			{			
 				//TODO: Waypoint check
-				_currentCheckpoint = (currentTask _player);
-				_currentCheckpointId = (simpleTasks _player) find _currentCheckpoint;
-				//diag_log format ["CurrentCheckpointId; %1. Count: %2", _currentCheckpointId, (count DYN_RACE_CHECKPOINTS - 1)];
-				if(_currentCheckpointId == count DYN_RACE_CHECKPOINTS - 1) then
+				//_currentCheckpoint = (currentTask _player);
+				_currentCheckpointId = _player getVariable ["currentWaypointId", -1];//(simpleTasks _player) find _currentCheckpoint;
+				if(_currentCheckpointId == count DYN_RACE_CHECKPOINTS - 1 || !(isPlayer _player)) then
 				{ //Current checkpoint is finish.
 					//We only save the finish time to the driver.
 					
@@ -43,7 +39,6 @@ _i= 0; for "_i" from 0 to (_racer_count - 1) do
 					
 					if((count _lap_times == DYN_RACE_LAPS)) then
 					{
-						diag_log "player done";
 						_teamNumber = _player getVariable ["teamNumber", -1];
 						_player setVariable ["hasFinished", true, true];
 						_players = [_player];
@@ -55,7 +50,7 @@ _i= 0; for "_i" from 0 to (_racer_count - 1) do
 						
 						if(isMultiplayer || {(player == _player)}) then
 						{
-							[_players,"DYN_RACE_Finished",_players] spawn BIS_fnc_MP;
+							[_players,"DYN_fnc_Finished",_players] call BIS_fnc_MP;
 						};
 					};
 				};
@@ -65,9 +60,9 @@ _i= 0; for "_i" from 0 to (_racer_count - 1) do
 };
 
 //publicVariable "DYN_RACE_RACERS";
-//[] call DYN_RACE_OnRacersChanged;
+//[] call DYN_fnc_OnRacersChanged;
 
-_finished_players = call DYN_RACE_GetFinishedPlayers;
+_finished_players = call DYN_fnc_GetFinishedPlayers;
 
 if(count _finished_players > 0 && DYN_RACE_FINISHTIME == -1 && DYN_RACE_TYPE != "COPS&ROBBERS") then
 {
@@ -85,12 +80,12 @@ if(count _finished_players > 0 && DYN_RACE_FINISHTIME == -1 && DYN_RACE_TYPE != 
 			DYN_RACE_STATE = "FINISHED";
 			publicVariable "DYN_RACE_STATE";
 
-			[] call DYN_RACE_OnRaceStateChanged;
+			[] call DYN_fnc_OnRaceStateChanged;
 		};
 	};
 };
 
-//[format ["%1 racers. %2 finished.", count DYN_RACE_RACERS, count _finished_players]] call DYN_RACE_Debug;
+//[format ["%1 racers. %2 finished.", count DYN_RACE_RACERS, count _finished_players]] call BIS_fnc_log;
 
 _finishedCount = (count _finished_players);
 _caughtCount = {(_x select 1) getVariable ["isCaught", false]} count DYN_RACE_RACERS;
@@ -100,5 +95,5 @@ if(DYN_RACE_DRIVERCOUNT == (count _finished_players) || (DYN_RACE_ROBBERCOUNT ==
 	DYN_RACE_STATE = "FINISHED";
 	publicVariable "DYN_RACE_STATE";
 
-	[] call DYN_RACE_OnRaceStateChanged;
+	[] call DYN_fnc_OnRaceStateChanged;
 };

@@ -1,3 +1,4 @@
+private ["_nearestRacer","_racer","_vehicle"];
 _pos = _this;
 
 _nearestRacer = objNull;

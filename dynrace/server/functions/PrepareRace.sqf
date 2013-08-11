@@ -23,6 +23,7 @@ DYN_RACE_SMOKE_GRENADES = [];
 DYN_RACE_TEAMCHOOSE_COUNTDOWN_STARTED = false;
 if!(isNil {DYN_RACE_MAP_VEHICLES}) then
 {
+	private ["_vehicles"];
 	{
 		_vehicles = _x select 1;
 		{

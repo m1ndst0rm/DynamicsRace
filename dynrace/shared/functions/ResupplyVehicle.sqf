@@ -1,6 +1,18 @@
-_magNames = _vehicle getVariable "defaultMagNames";
-_magNamesCount = count _magNames;
-for [ {_i = 0}, {_i < (_magNamesCount)}, {_i = _i + 1}] do
-{
-	_vehicle addMagazineTurret [_magNames select _i, [0]];
-};
+private ["_magNames","_vehicle","_magNamesCount","_i"];
+_vehicle = vehicle player;
+_magazineInfo = _vehicle getVariable "defaultMagazineInfo";
+{	
+	_magazine = _x;
+	
+	_loaded = false;//_magazine select 2;
+	if(_loaded) then
+	{
+		_ammoLeft = _magazine select 1;
+		_vehicle setAmmo [currentweapon _vehicle, _ammoLeft];
+	}
+	else
+	{
+		_magName = _magazine select 0;
+		_vehicle addMagazineTurret [_magName, [0]];
+	};
+} foreach _magazineInfo;

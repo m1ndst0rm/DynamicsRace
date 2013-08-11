@@ -1,8 +1,11 @@
-/* DYN_RACE_StopRaceOnClient: Stops a running race on a client.
+/* DYN_fnc_StopRaceOnClient: Stops a running race on a client.
 * This function should NOT be called directly. Internal function.
 *
 */
-"DYN_RACE_StopRaceOnClient" call DYN_RACE_Debug;
+private ["_vehicle","_speed","_diff","_vel","_dir"];
+"DYN_fnc_StopRaceOnClient" call BIS_fnc_log;
+
+(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_RESET];
 
 //Incase player hasn't stopped (didn't finish the race).
 if(player getVariable ["isDriver",false]) then
@@ -27,17 +30,21 @@ if(player getVariable ["isDriver",false]) then
 	};
 };
 sleep 3;
-
-[] spawn DYN_RACE_SPEC_DisableSpectator;
+titleCut ["", "BLACK OUT", 1];
+[false] call DYN_fnc_DisableSpectator;
 sleep 1;
 if((vehicle player) != player) then
 {
 	moveOut player;
 };
+sleep 0.1;
+
 _pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
 player setPos _pos;
 
 hint "";
+
+titleCut ["", "BLACK IN", 2];
 
 disableSerialization;
 createDialog "DYN_ScoreBoardDiag";

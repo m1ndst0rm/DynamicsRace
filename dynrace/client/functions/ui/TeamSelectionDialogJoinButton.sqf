@@ -1,3 +1,4 @@
+private ["_dialog","_teamList","_selectedTeamIndex","_teamId","_spotlist","_selectedRoleIndex","_spotType"];
 disableSerialization;
 _dialog = findDisplay 4010;
 
@@ -11,5 +12,4 @@ _selectedRoleIndex = Lbselection _spotlist select 0;
 if(isNil {_selectedRoleIndex}) then {_selectedRoleIndex = 0;};
 _spotType = lbData[4013,_selectedRoleIndex];
 
-diag_log format ["Player choose team %1 and spottype %2", _teamId, _spotType];
-[[player, parseNumber _teamId, _spotType],"DYN_RACE_ProcessTeamSpotChoose", false] spawn BIS_fnc_MP;
+[[player, parseNumber _teamId, _spotType],"DYN_fnc_ProcessTeamSpotChoose", false] call BIS_fnc_MP;

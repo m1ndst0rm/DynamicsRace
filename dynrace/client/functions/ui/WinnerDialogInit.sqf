@@ -1,10 +1,11 @@
+private ["_dialog","_scoreList","_finish_array","_finish_array_count","_myPos","_i","_score","_placeString"];
 disableSerialization;
 
 _dialog = findDisplay 4020;
 _scoreList = _dialog displayCtrl 4021;
 lnbClear _scoreList;
 
-_finish_array = [0] call DYN_RACE_GetFinishArray;
+_finish_array = [0] call DYN_fnc_GetFinishArray;
 _finish_array_count = count _finish_array;
 _myPos = -1;
 _i= 0; for "_i" from 0 to (_finish_array_count - 1) do

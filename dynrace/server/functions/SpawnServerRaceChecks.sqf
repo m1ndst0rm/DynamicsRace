@@ -1,6 +1,7 @@
 #define DYN_RACE_SLEEP_FINISHCHECK 0.1
 #define DYN_RACE_SLEEP_COPCHECK 1
 if (!isServer) exitWith {};
+private ["_pCount","_i","_racer","_player","_lapTimes","_finished","_cops","_robbers","_copsCount","_robbersCount","_speedCheck","_distanceLimit","_robberArray","_robber","_robberPoliceNearTime","_robberSpeed","_copNear","_j","_cop","_teamNumber","_players","_team","_teamName"];
 
 [] spawn{
 	while {DYN_RACE_STATE == "ONGOING"} do
@@ -31,11 +32,10 @@ if (!isServer) exitWith {};
 						{
 							if!(_player getVariable ["prosessingFinish", false]) then
 							{
-								_finished = [DYN_RACE_FINISHTRIGGER, _player] call DYN_RACE_InTrigger;
+								_finished = [DYN_RACE_FINISHTRIGGER, _player] call DYN_fnc_InTrigger;
 								if(_finished) then
 								{
-									diag_log "Calling p finished";
-									[_player] call DYN_RACE_PlayerFinished;
+									[_player] call DYN_fnc_PlayerFinished;
 								};
 							};
 						};
@@ -120,25 +120,27 @@ if(DYN_RACE_TYPE == "COPS&ROBBERS") then
 					
 					if(isMultiplayer || {(player == _robber)}) then
 					{
-						[_players,"DYN_RACE_Finished",_players] spawn BIS_fnc_MP;
+						[_players,"DYN_fnc_Finished",_players] call BIS_fnc_MP;
 					};
 					
 					if ({((_x select 0) getVariable ["isCaught", false] || (_x select 0) getVariable ["hasFinished", false])} count _robbers == count _robbers) then
 					{//All
+						DYN_RACE_DISPLAYMESSAGE = "All robbers caught!";
+						publicVariable "DYN_RACE_DISPLAYMESSAGE";
+					
 						//End race with cops as winners
 						DYN_RACE_STATE = "FINISHED";
 						publicVariable "DYN_RACE_STATE";
 
-						[] call DYN_RACE_OnRaceStateChanged;
+						[] call DYN_fnc_OnRaceStateChanged;
 					}
 					else
 					{//Just one, broadcast message
-						diag_log format ["Teamno %1 got caught.", _teamNumber];
-						_teamName = [_teamNumber, 1] call DYN_RACE_GetTeamName;
+						_teamName = [_teamNumber, 1] call DYN_fnc_GetTeamName;
 						DYN_RACE_DISPLAYMESSAGE = format["%1 got caught!", _teamName];
 						publicVariable "DYN_RACE_DISPLAYMESSAGE";
 
-						[] call DYN_RACE_OnDisplayMessageChanged;
+						[] call DYN_fnc_OnDisplayMessageChanged;
 					};
 				};
 			};
@@ -146,4 +148,38 @@ if(DYN_RACE_TYPE == "COPS&ROBBERS") then
 			sleep DYN_RACE_SLEEP_COPCHECK;
 		};
 	};
-}; 
+};
+
+//AI waypoint handling
+[] spawn {
+	_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
+	if ({ !(isPlayer _x)} count _units > 0) then
+	{
+		while {DYN_RACE_STATE == "ONGOING"} do
+		{
+			{
+				_unit = _x;
+				if!(isPlayer _unit) then
+				{
+					_currentWayPointId = currentWaypoint (group _unit);
+					if((_currentWayPointId - 1) != _unit getVariable "currentWaypointId") then
+					{
+						_unit setVariable ["currentWaypointId", _currentWayPointId - 1, true];
+					};
+					
+					_previousWaypoint = _currentWayPointId - 1;
+					if(_previousWaypoint < 0) then
+					{
+						_previousWaypoint =  (count DYN_RACE_CHECKPOINTS) - 1;
+					};
+					
+					_previousCheckpointDestination = waypointPosition [(group _unit), _previousWaypoint];
+					_previousWayPointDistance = _unit distance _previousCheckpointDestination;
+					
+					_unit setVariable ["previousWaypointDistance", _previousWayPointDistance, true];
+				};
+			} foreach _units;
+			sleep 1;
+		};	
+	};
+};

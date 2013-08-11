@@ -1,3 +1,2 @@
-"DYN_RACE_OnChatChange" call DYN_RACE_Debug;
-diag_log format["Displaying :%1",DYN_RACE_CHAT];
+"DYN_fnc_OnChatChange" call BIS_fnc_log;
 systemChat DYN_RACE_CHAT;

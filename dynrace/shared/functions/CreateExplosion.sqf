@@ -1,13 +1,15 @@
-/* DYN_RACE_CreateExplosion: Call to trigger one or more explosions on the map
+/* DYN_fnc_CreateExplosion: Call to trigger one or more explosions on the map
 * Function creates one or more explosions on the map but takes multiple triggers into account (prevents multiple trigger hits from creating multiple explosions so 10 players don't trigger 10 explosions and create frame drops).
 *
-* Example: ["marker_1"] call DYN_RACE_CreateExplosion;
-* Example: ["marker_1", "marker_2", ...] call DYN_RACE_CreateExplosion;
+* Example: ["marker_1"] call DYN_fnc_CreateExplosion;
+* Example: ["marker_1", "marker_2", ...] call DYN_fnc_CreateExplosion;
 * params:
 * string : _markername
 */
 if (!isServer) exitWith {};
-"DYN_RACE_Explosion" call DYN_RACE_Debug;
+private ["_markername","_markers","_i","_ammo","_count","_explosions_to_create","_explosion_marker_name","_j","_xVel","_yVel","_chosen","_zVel","_xCoord","_yCoord","_zCoord","_bomb"];
+
+"DYN_RACE_Explosion" call BIS_fnc_log;
 
 _markers = [];
 _i= 0; for "_i" from 0 to (count _this - 1) do

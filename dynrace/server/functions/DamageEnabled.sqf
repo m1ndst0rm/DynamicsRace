@@ -1,15 +1,16 @@
-/* DYN_RACE_DamageEnabled: Change the damage state of all players or vehicles
+/* DYN_fnc_DamageEnabled: Change the damage state of all players or vehicles
  * 
  * Enable or disable damage vehicles or drivers. 
  * 
- * [_type, _damageEnabled] call DYN_RACE_DamageEnabled;
+ * [_type, _damageEnabled] call DYN_fnc_DamageEnabled;
  * 
  * Parameters:
  * 	_type: "PLAYER" or "VEHICLE"
  * 	_damageEnabled: bool respresenting if the unit should recieve damage
  * 	
  */
-"DYN_RACE_DamageEnabled" call DYN_RACE_Debug;
+ private ["_type","_damageEnabled","_racers_count","_i","_racer"];
+"DYN_fnc_DamageEnabled" call BIS_fnc_log;
 if (!isServer) exitWith {} ;
 _type = _this select 0;
 _damageEnabled = _this select 1;
@@ -32,4 +33,4 @@ for [ {_i = 0}, {_i < _racers_count}, {_i = _i + 1}] do
 };
 
 publicVariable "DYN_RACE_RACERS";
-[] call DYN_RACE_OnRacersChanged;
+[] call DYN_fnc_OnRacersChanged;

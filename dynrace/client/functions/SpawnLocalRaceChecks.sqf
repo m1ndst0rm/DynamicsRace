@@ -1,4 +1,4 @@
-/* DYN_RACE_SpawnLocalRaceChecks: Spawns a loop that checks local client stuff
+/* DYN_fnc_SpawnLocalRaceChecks: Spawns a loop that checks local client stuff
  * Spawns a loop that does a couple of client sided chechsk including:
  * -Player in vehicle
  * -Player on road
@@ -13,7 +13,8 @@
 #define DYN_RACE_VEHICLE_DAMAGE_CHECK 1
 #define DYN_RACE_MARKER_UPDATE 1
 
-"DYN_RACE_SpawnLocalRaceChecks" call DYN_RACE_Debug;
+private ["_timeLeft","_text","_tempTime","_vehicle","_isOnRoad","_time","_reset","_currentCheckpointId","_currentCheckpoint","_previousCheckpoint","_previousCheckpointId","_currentCheckpointDestination","_previousWaypoint","_previousCheckpointDestination","_previousWayPointDistance","_nextWaypointId","_nextWaypoint","_lapsDriven","_lapsDrivenOld","_lapsleft","_racer","_player_name","_marker","_i","_player"];
+"DYN_fnc_SpawnLocalRaceChecks" call BIS_fnc_log;
 
 if(player getVariable ["isCommander", false]) then
 {
@@ -35,9 +36,7 @@ if(player getVariable ["isCommander", false]) then
 				[_text, -1, 0.05, 0.9, 0, 0, 11111] spawn BIS_fnc_dynamicText;
 			};
 		};
-		//_tempTime = diag_tickTime;
 		sleep DYN_RACE_FINISH_CHECK;
-		//diag_log format ["Slept 1sec. diagtime: %1", (diag_tickTime - _tempTime)];
 	};
 };
 
@@ -50,12 +49,7 @@ if(player getVariable ["isCommander", false]) then
 		{
 			_vehicle = player getVariable "vehicle";
 			
-			//This check is actually for when vehicle is submerged
-			if(damage _vehicle == 1) then
-			{
-				[] call DYN_RACE_ResetVehicle;
-			};
-			
+			//This check is actually for when vehicle is submerged			
 			if(player getVariable "isDriver") then
 			{
 				player moveInDriver _vehicle;
@@ -70,76 +64,94 @@ if(player getVariable ["isCommander", false]) then
 };
 
 //Roadcheck
-[] spawn
+if(player getVariable "isDriver") then
 {
-	while{ (DYN_RACE_STATE == "ONGOING") } do 
+	[] spawn
 	{
-		
-		_isOnRoad = isOnRoad (position vehicle player);
-		if(_isOnRoad) then
+		while{ (DYN_RACE_STATE == "ONGOING") } do 
 		{
-			if !(DYN_PLAYER_ON_ROAD) then
-			{//Player was previously offroad, reset timer.
-				DYN_PLAYER_ON_ROAD = true;
-				DYN_PLAYER_LAST_ON_ROAD_TIME = objNull;
-			};
-			DYN_RACE_LASTONROADPOS = position vehicle player;
-			DYN_RACE_LASTONROADDIR = direction vehicle player;
-		}
-		else
-		{
-			if(DYN_RACE_MUST_STAY_ON_ROAD_LOCAL && DYN_RACE_ELAPSED_TIME > 15) then
-			{
-				_time = diag_tickTime;
-				if (DYN_PLAYER_ON_ROAD) then
-				{//Player moving offroad
-					DYN_PLAYER_ON_ROAD = false;
-					DYN_PLAYER_LAST_ON_ROAD_TIME = _time;
-				};
 			
-				if(_time - DYN_PLAYER_LAST_ON_ROAD_TIME >= 5) then
-				{//Display reset timer
-					_reset = 20 - (_time - DYN_PLAYER_LAST_ON_ROAD_TIME);
-					if(_reset > 0) then
-					{
-						_text = format["<t align='center' valign='middle' size='1.8'>Warning leaving road.<br/>Reset in  %1</t>", floor _reset];
-						//(_time - DYN_RACE_LAST_WARNING > 1) then
-						//{
-						//	DYN_RACE_LAST_WARNING = _time;
-					   [_text, -1, 0.05, 0.9, 0, 0, 11113] spawn BIS_fnc_dynamicText;
-						//};
+			_isOnRoad = isOnRoad (position vehicle player);
+			if(_isOnRoad) then
+			{
+				if !(DYN_PLAYER_ON_ROAD) then
+				{//Player was previously offroad, reset timer.
+					DYN_PLAYER_ON_ROAD = true;
+					DYN_PLAYER_LAST_ON_ROAD_TIME = objNull;
+				};
+				DYN_RACE_LASTONROADPOS = position vehicle player;
+				DYN_RACE_LASTONROADDIR = direction vehicle player;
+			}
+			else
+			{
+				if(DYN_RACE_MUST_STAY_ON_ROAD_LOCAL && DYN_RACE_ELAPSED_TIME > 5) then
+				{
+					_time = diag_tickTime;
+					if (DYN_PLAYER_ON_ROAD) then
+					{//Player moving offroad
+						DYN_PLAYER_ON_ROAD = false;
+						DYN_PLAYER_LAST_ON_ROAD_TIME = _time;
+					};
+				
+					if(_time - DYN_PLAYER_LAST_ON_ROAD_TIME >= 5) then
+					{//Display reset timer
+						_reset = 20 - (_time - DYN_PLAYER_LAST_ON_ROAD_TIME);
+						if(_reset > 0) then
+						{
+							_text = format["<t align='center' valign='middle' size='1.8'>Warning leaving road.<br/>Reset in  %1</t>", floor _reset];
+							//(_time - DYN_RACE_LAST_WARNING > 1) then
+							//{
+							//	DYN_RACE_LAST_WARNING = _time;
+						   [_text, -1, 0.05, 0.9, 0, 0, 11113] spawn BIS_fnc_dynamicText;
+							//};
+						};
+					};
+					if(_time - DYN_PLAYER_LAST_ON_ROAD_TIME >= 20) then
+					{//Reset
+						//_currentCheckpointId = (simpleTasks player) find _currentCheckpoint;
+						//_previousCheckpoint = getMarkerPos "DYN_RACE_Marker_Start";
+						//if(_currentCheckpointId != 0) then
+						// {
+							// _previousCheckpointId = _currentCheckpointId - 1;
+							// _previousCheckpoint = taskDestination (simpleTasks player select _previousCheckpointId);
+						// };
+						//(vehicle player) setPos _previousCheckpoint;
+						(vehicle player) setPos DYN_RACE_LASTONROADPOS;
+						(vehicle player) setDir  DYN_RACE_LASTONROADDIR;
+						//In case start pos is not on raod
+						DYN_PLAYER_LAST_ON_ROAD_TIME = _time;
+						DYN_PLAYER_ON_ROAD = true;
 					};
 				};
-				if(_time - DYN_PLAYER_LAST_ON_ROAD_TIME >= 20) then
-				{//Reset
-					//_currentCheckpointId = (simpleTasks player) find _currentCheckpoint;
-					//_previousCheckpoint = getMarkerPos "DYN_RACE_Marker_Start";
-					//if(_currentCheckpointId != 0) then
-					// {
-						// _previousCheckpointId = _currentCheckpointId - 1;
-						// _previousCheckpoint = taskDestination (simpleTasks player select _previousCheckpointId);
-					// };
-					//(vehicle player) setPos _previousCheckpoint;
-					(vehicle player) setPos DYN_RACE_LASTONROADPOS;
-					(vehicle player) setDir  DYN_RACE_LASTONROADDIR;
-					//In case start pos is not on raod
-					DYN_PLAYER_LAST_ON_ROAD_TIME = _time;
-					DYN_PLAYER_ON_ROAD = true;
-				};
 			};
+			sleep DYN_RACE_ON_ROAD_CHECK;
 		};
-		sleep DYN_RACE_ON_ROAD_CHECK;
 	};
 };
-
 //Check checkpoints
 [] spawn {
 	_currentCheckpoint = (currentTask player);
 	_currentCheckpointDestination = taskDestination _currentCheckpoint;
+
 	while{ (DYN_RACE_STATE == "ONGOING") } do 
 	{
-		
 		_currentCheckpointId = (simpleTasks player) find _currentCheckpoint;
+		
+		_previousWaypoint = -1;
+		if(_currentCheckpointId == 0) then
+		{
+			_previousWaypoint = (simpleTasks player) select (count DYN_RACE_CHECKPOINTS - 1);
+		}
+		else
+		{
+			_previousWaypoint = (simpleTasks player) select (_currentCheckpointId - 1);
+		};
+		
+		_previousCheckpointDestination = taskDestination _previousWaypoint;
+		_previousWayPointDistance = player distance _previousCheckpointDestination;
+		
+		player setVariable ["previousWaypointDistance", _previousWayPointDistance, true];
+		
 		if((_currentCheckpointDestination distance player) < 25) then
 		{
 			//player hits a waypoint
@@ -160,6 +172,7 @@ if(player getVariable ["isCommander", false]) then
 			{
 				player setCurrentTask _nextWaypoint;
 				_currentCheckpointId = _nextWaypointId;
+				player setVariable ["currentWaypointId", _nextWaypointId, true];
 				_text = "<t align='center' size='1.8'>Checkpoint!</t>";
 				[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
 			};
@@ -180,10 +193,10 @@ if(player getVariable ["isCommander", false]) then
 			
 			if (DYN_RACE_STATE == "ONGOING") then
 			{
-				diag_log "resetting checkpoint ro start";
 				if(_lapsDriven == DYN_RACE_LAPS) then
 				{
 					player setCurrentTask taskNull;
+					player setVariable ["currentWaypointId", -1, true];
 					_text = "<t align='center' size='1.8'>Finished!!!</t>";
 					[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
 				}
@@ -193,6 +206,7 @@ if(player getVariable ["isCommander", false]) then
 					
 					_lapsleft = DYN_RACE_LAPS - _lapsDriven;
 					player setCurrentTask _nextWaypoint;
+					player setVariable ["currentWaypointId", 0, true];
 					_currentCheckpointId = (simpleTasks player) find _nextWaypoint;
 					_text = format["<t align='center' size='1.8'>%1 laps left!</t>", _lapsleft];
 					[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
@@ -214,7 +228,7 @@ if(player getVariable ["isCommander", false]) then
 		_vehicle = vehicle player;
 		if(damage _vehicle == 1 || underwater _vehicle || underwater player) then
 		{
-			[] call DYN_RACE_ResetVehicle;
+			[] call DYN_fnc_ResetVehicle;
 		};
 		sleep DYN_RACE_VEHICLE_DAMAGE_CHECK;
 	};

@@ -1,3 +1,14 @@
+/*
+	Author: M1nd0
+
+	Description:
+	Local script used to make a player finish, stop his vehicle and enable spectator mode.
+
+	Parameter(s):
+	_this: List of players (array)
+	Returns:
+*/
+private ["_vehicle","_speed","_diff","_vel","_dir"];
 if(player in _this) then
 {
 	DYN_RACE_PLAYER_FINISHED = true;
@@ -22,6 +33,6 @@ if(player in _this) then
 		
 		_vehicle engineOn false;
 		
-		[] spawn DYN_RACE_SPEC_EnableSpectator;
+		[] call DYN_fnc_EnableSpectator;
 	};
 };

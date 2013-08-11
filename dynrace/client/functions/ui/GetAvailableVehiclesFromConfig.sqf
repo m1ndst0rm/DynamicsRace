@@ -1,7 +1,8 @@
-/* DYN_RACE_GetAvailableVehiclesFromConfig: Loads the vehicle data for the racer select list from avaiable classnames.
+/* DYN_fnc_GetAvailableVehiclesFromConfig: Loads the vehicle data for the racer select list from avaiable classnames.
 *
 */
-"DYN_RACE_GetAvailableVehiclesFromConfig" call DYN_RACE_Debug;
+private ["_vehicles","_classname","_vehicleclass","_picture"];
+"DYN_fnc_GetAvailableVehiclesFromConfig" call BIS_fnc_log;
 private["_cfgvehicles","_vehicles","_cur_vehicle","_classname","_scope","_picture","_vehicleclass","_name","_match","_compare"];
 _vehicles = [];
 

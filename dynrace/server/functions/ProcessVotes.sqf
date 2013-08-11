@@ -1,5 +1,6 @@
 if (!isServer) exitWith {} ;
-"DYN_RACE_ProcessVotes" call DYN_RACE_Debug;
+private ["_all_votes","_vote_type","_voteCount","_i","_pVoteArray","_player_votes","_player_vote","_player_vote_type","_player_vote_vote","_typeVotes","_votes","_voteIndex","_startRace","_startTeamVote","_vehicleClassName","_wonRaceType","_voteAmount","_damageVote","_damage","_message","_vehicleVote","_vehicle","_vehicleName"];
+"DYN_fnc_ProcessVotes" call BIS_fnc_log;
 DYN_RACE_PROCESSING_VOTES = true;
 
 d_fnc_getVoteWinner =
@@ -62,7 +63,6 @@ switch (_vote_type) do
 {
 	case "RACETYPE":
 	{
-		diag_log "Case is racetype";
 		_wonRaceType = "RACETYPE" call d_fnc_getVoteWinner;
 		DYN_RACE_TYPE = _wonRaceType select 0;
 		_voteAmount =  _wonRaceType select 1;
@@ -80,7 +80,6 @@ switch (_vote_type) do
 		
 		
 		publicVariable "DYN_RACE_TYPE";
-		diag_log format["Race Type: %1" , DYN_RACE_TYPE];
 		if(DYN_RACE_TYPE != "COPS&ROBBERS") then
 		{
 			DYN_RACE_VOTE_TYPE = "DAMAGETYPE";
@@ -122,11 +121,19 @@ switch (_vote_type) do
 		if(DYN_RACE_TYPE != "CAT&MOUSE") then
 		{
 			_vehicleVote = "VEHICLETYPE" call d_fnc_getVoteWinner;
-			diag_log _vehicleVote;
+
 			_vehicle = "";
 			if(isNil {_vehicleVote} ) then
 			{
 				//Set a random vehicle based on race type or extending voting time?
+				if(DYN_RACE_TYPE == "SINGLE") then
+				{
+					_vehicle = DYN_RACE_AVAILABLE_VEHICLES_SINGLE select (floor (random count DYN_RACE_AVAILABLE_VEHICLES_SINGLE));
+				}
+				else
+				{
+					_vehicle = DYN_RACE_AVAILABLE_VEHICLES_SINGLE select (floor (random count DYN_RACE_AVAILABLE_VEHICLES_DUAL));
+				};
 			}
 			else
 			{
@@ -152,21 +159,20 @@ switch (_vote_type) do
 		};
 	};
 };
-diag_log DYN_RACE_VOTE_TYPE;
 publicVariable "DYN_RACE_CHAT";
 
 if!(isDedicated) then
 {
-	[] spawn DYN_RACE_OnChatChange;
+	[] spawn DYN_fnc_OnChatChange;
 };
 
 DYN_RACE_VOTE_COUNTDOWN_STARTED = false;
 DYN_RACE_PROCESSING_VOTES = false;
 if(_startTeamVote) then
 {
-	[] call DYN_RACE_CreateTeams;
+	[] call DYN_fnc_CreateTeams;
 };
 if(_startRace) then
 {
-	[] call DYN_RACE_StartRace;
+	[] call DYN_fnc_StartRace;
 };

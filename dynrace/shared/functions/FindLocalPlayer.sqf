@@ -6,6 +6,7 @@
 * Returns:
 * player: returns a local player object
 */
+hintc "Deprecated";
 DYN_RACE_FindLocalPlayer =
 {
 	_player_net_id = _this select 0;
@@ -17,7 +18,6 @@ DYN_RACE_FindLocalPlayer =
 		
 		if(_unit_id == _player_net_id) then
 		{
-			//diag_log format["Found:%1--%2", _player_net_id, _unit_id];
 			_player = _unit;
 		};
 		

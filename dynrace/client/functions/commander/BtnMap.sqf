@@ -1,4 +1,4 @@
-"DYN_RACE_BtnMap" call DYN_RACE_Debug;
+"DYN_RACE_BtnMap" call BIS_fnc_log;
 if(DYN_RACE_SPECTATOR_CAM_FREELOOK) then
 {
 	DYN_RACE_SPECTATOR_CAM cameraeffect ["Terminate","back"];

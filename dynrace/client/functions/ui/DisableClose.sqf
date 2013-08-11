@@ -9,7 +9,8 @@ switch (_keypressed) do
 {
     case KEYSCODE_ESC_KEY:
     {
-		if! (DYN_RACE_DEBUG_ENABLED || false) then
+		//if! (DYN_DEBUG_ENABLED) then
+		if(true) then
 		{
 			_return = true;
 		};

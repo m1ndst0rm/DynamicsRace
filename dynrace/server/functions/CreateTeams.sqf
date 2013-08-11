@@ -1,8 +1,10 @@
 //Creates teams of current online players and publishes them to clients.
 //["Name",[spotname, amount,[players], spottype],[players]]; //Players refereced double because of easier access.
+private ["_total_racers","_teams","_i","_teamName","_team","_unevenPlayers","_robbers","_cops","_commanders","_racers","_chasers"];
+
 DYN_RACE_TEAMS = [];
-_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
-_total_racers = count _units;
+//_units = 
+_total_racers = (if (isMultiplayer) then {{!(_x getVariable ["isSpectator", false])} count playableUnits} else {count switchableUnits});
 
 switch (DYN_RACE_TYPE) do
 {
@@ -32,8 +34,8 @@ switch (DYN_RACE_TYPE) do
 			// teamName = "Commander";
 			// _team = [_teamName, [["COMMANDER", 1,[]]],[]];
 			// DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
-			teamName = "Spectator";
-			_team = [_teamName, [["SPECTATOR", 1,[]]],[]];
+			teamName = "Commanders";
+			_team = [_teamName, [["COMMANDER", 1,[]]],[]];
 			DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 		};
 	};
@@ -93,9 +95,12 @@ switch (DYN_RACE_TYPE) do
 			_team = [_teamName, [["COP", _cops,[]]],[]];
 			DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 			
-			_teamName = format ["Commanders", _i + 1];
-			_team = [_teamName, [["COMMANDER", _commanders,[]]],[]];
-			DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
+			if(_commanders > 0) then
+			{
+				_teamName = format ["Commanders", _i + 1];
+				_team = [_teamName, [["COMMANDER", _commanders,[]]],[]];
+				DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
+			};
 		}
 		else
 		{
@@ -152,7 +157,7 @@ switch (DYN_RACE_TYPE) do
 				//_team = [_teamName, [["COMMANDER", 2,[]]],[]];
 				//DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 				_teamName = "Spectators";
-				_team = [_teamName, [["SPECTATOR", 2,[]]],[]];
+				_team = [_teamName, [["COMMANDER", _unevenPlayers,[]]],[]];
 				DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 			};
 		};
@@ -172,3 +177,7 @@ switch (DYN_RACE_TYPE) do
 	};
 };
 publicVariable "DYN_RACE_TEAMS";
+if(DYN_RACE_TYPE != "SINGLE") then
+{
+	[[],"DYN_fnc_TeamSelectionDialog", true] call BIS_fnc_MP;
+};

@@ -11,11 +11,11 @@ It will mainly provide these race types:
 * Race with driver & gunner without damage (only allowed to shoot in front of vehicle, hits slow down oponents)
 * Race with driver & gunner with damage. 
 * Cops & Robbers: 1 (or more depening on player ammount) armed vehicle(s) with 2 players are robbers. Rest is police and must arrest (halt) them before robbers reach the finish.
-* Cat & Mice: Teams of 2 players: Each player has a mice (slower vehicle) and a cats (faster). Cats must prevent the mice from opponent teams from finishing. If more then 12 players teams get larger.
-* (WIP) driver, gunner & commander race.
-* (WIP) Cops & Robbers + Commander:
-* (WIP) Cat & Mice + Commander:
-* (WIP) Heli chase. Teams of 2 players (driver & gunner) need to race for finish while being chased by other players in helis.
+* Cat & Mouse: Teams of 2 players: Each player has a mice (slower vehicle) and a cats (faster). Cats must prevent the mice from opponent teams from finishing. If more then 12 players teams get larger.
+* Driver, gunner & commander race.
+* Cops & Robbers + Commander: Same as cops & robbers but with commander.
+* Cat & Mouse + Commander: Same as cat & mouse but with commander.
+* (WIP) Heli chase: drivers must run from helies.
 
 Features
 --------
@@ -40,16 +40,13 @@ Features
 - [x] Trigger: Enable or disable guns
 - [x] 2nd Race type: Each vehicle get's a driver and gunner.
 - [x] Multiple laps
-- [ ] Commander mode: Help your team or obstruct the enemy as a commander by placing explosion, repairing vehicles, geving boos or even taking control of sertaind enemy vehicles fora while.
+- [x] Commander mode: Help your team or obstruct the enemy as a commander by placing explosion, repairing vehicles, geving boos or even taking control of sertaind enemy vehicles fora while.
 
 And more.
 
 TODO / WIP:
 - Single & Dual race: damage balance
-- Cops & Robbers: arrest action / feature. 
-- Cops & Robbers: global messages on arrest if more then 1 robber vehicle
-- Cops & Robbers: damage test
-- Commander mode: Map usage, tp and others things
+- Cops & Robbers: Robbers screen fuzz if almost arrest?
 - Heli chase: Everything
 - Figure out what to do with vehicle desctruction
 - Fix a decent vehicle reset position based. (Now if muststayonraod lastroadpos, but if not muststayonroad how to reset when we have no clue about track.
@@ -88,24 +85,35 @@ Incase you add your own:
 Usable variables (Place in init):
 
 * VAR_NAME (TYPE:(VALUES):DEFAULT): DESCRIPTION
-* DYN_RACE_DEBUG_ENABLED (bool:false): If true function calls and other debug info will be displayed in log files.
 * DYN_RACE_LAPS (int: 1): Amount of laps. 1 Means a to b race.
 * DYN_RACE_MUST_STAY_ON_ROAD (bool: true): Global starting value. If true vehicles will be reset after leaving the road for 20 seconds.
 * DYN_RACE_AVAILABLE_VEHICLES_SINGLE (string:"C_Offroad_01_F","B_Quadbike_01_F","B_Hunter_F","B_MRAP_01_F"): Available race vehicles (classnames) for single race mode.
-* DYN_RACE_AVAILABLE_VEHICLES_DUAL (string:"B_MRAP_01_hmg_F","B_MRAP_01_gmg_F","O_MRAP_02_hmg_F","O_MRAP_02_gmg_F"): Available race vehicles (classnames) for dual race mode.
+* DYN_RACE_AVAILABLE_VEHICLES_DUAL (string:all vehicles with guns): Available race vehicles (classnames) for dual race mode.
 
 Map markers which must be placed inside your mission:
 
 * DYN_RACE_Start_Position_X: Start positions. Atleast the same amount of start positions as players should be available. !!!Keep in mind the distance between the start point when using larger vehicles!!!
-* DYN_Checkpoint_X: Checkpoints. Start with 1 and increase to x. Do not create the finish line as a checkpoint.
+* DYN_Checkpoint_X: Checkpoints: start with DYN_Checkpoint_1 and increment. Finish checkpoint will automaticly be created. (See below: required triggers).
+	-If 1 lap make the first checkpoint BEHIND the start position. This is needed for player position calculation
+	-If more laps the first checkpoints can simply be the "first checkpoint". The finish line will act as the position calculation point.
+	-Look at checkpoints.jpg for a "how to place checkpoints".
 
 Map triggers which must be placed inside your mission: (see function documentation for advanced ussage):
 
 * Create 1 trigger which acts as the finish line named: DYN_RACE_FINISHTRIGGER. No onActs or conditions need to be set.
 
 Option triggers:
-* ["marker_1", "marker_2", ...] call DYN_RACE_CreateExplosion: Create one ore multiple explosions. Explosions are globally saved to prevent multiple players from triggering multiple explosions.
-* DYN_RACE_SpawnVehicleMove: See server\functions\SpawnVehicleMove.sqf for doc. Spawns traffic
+* ["marker_1", "marker_2", ...] call DYN_fnc_CreateExplosion: Create one ore multiple explosions. Explosions are globally saved to prevent multiple players from triggering multiple explosions.
+* DYN_fnc_SpawnVehicleMove: See server\functions\SpawnVehicleMove.sqf for doc. Spawns traffic
+* Mustsayonraod: onAct: DYN_RACE_MUST_STAY_ON_ROAD_LOCAL = false (or true)   condition: this && vehicle player in thislist
+
+F.A.Q.
+------
+Q: Why isn't this a mod?
+A: Comming soon. Because this script is in aplha stage I am currently not making a mod out of it. I want to make it a bit stable first.
+
+Q: Are you looking for people to help out
+A: Yes. If you are an experienced scripter, moddel or modeller you are welcome to join the club.
 
 Terms of Use
 ------------
@@ -114,7 +122,6 @@ If you are planning on modding/adding contents to this mod please contact me fir
 
 Made possible by / credits:
 ---------------------------
--BTK: BTK spectator script
--Kronzky: String functions
--Team Dynamics: Testing
--JoSchaap, JW Custom & Killzone_Kid: Testing/troubleshooting and help with scripting.
+* Kronzky: String functions
+* Team Dynamics: Testing
+* JoSchaap, JW Custom & Killzone_Kid and many others from arma3 scripting forum: Testing/troubleshooting and help with scripting.

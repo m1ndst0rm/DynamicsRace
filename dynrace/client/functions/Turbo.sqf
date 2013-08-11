@@ -1,3 +1,4 @@
+private ["_sleepTimeOriginal","_sleepTime","_velIncrease","_vehicle","_maxSpeed","_speed","_vel","_dir","_dvelIncrease"];
 _sleepTimeOriginal = 0.05;
 _sleepTime = _sleepTimeOriginal;
 _velIncrease = 0.2;

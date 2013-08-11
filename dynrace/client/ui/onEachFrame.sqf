@@ -41,7 +41,7 @@ addMissionEventHandler ["Draw3D",
 						};
 						
 						_vehicle = _racer select 2;
-						_playerpos = getpos _player;
+						_playerpos = visiblePosition _player;
 						_playerpos = [_playerpos select 0, _playerpos select 1, (_playerpos select 2) + 2];
 						
 						drawIcon3D ["", [1,1,1,1], _playerpos, 0, 0, 0, _player_name, 0,_textSize];
@@ -49,6 +49,36 @@ addMissionEventHandler ["Draw3D",
 				};
 			};
 		} foreach DYN_RACE_RACERS;
+		// if(player getVariable ["isCommander", false]) then
+		// {
+			// if(DYN_RACE_SPEC_ENABLED) then
+			// {
+				// _color = [1,0,0,1];
+				// if(count DYN_RACE_COMMANDER_SELECTED_ACTION > 0) then
+				// {
+					// _action_cost = DYN_RACE_COMMANDER_SELECTED_ACTION select 5; 
+					// if(_action_cost <= DYN_RACE_COMMANDER_RESOURCEPOINTS) then
+					// {
+						// //Green
+						// _color = [0,1,0,1];
+					// };
+				// };
+				
+				// _playerPos = getPosATL DYN_RACE_SPECTATOR_CAM;
+				// drawIcon3D [
+					// "\a3\ui_f\data\IGUI\Cfg\TacticalDisplay\targettexture_gs.paa",
+					// _color,
+					// [_playerPos select 0,_playerPos select 1,2.3],
+					// 2,
+					// 2,
+					// direction DYN_RACE_SPECTATOR_CAM,
+					// "",
+					// 0,
+					// 0.03,
+					// "PuristaMedium"
+				// ];
+			// };
+		// };
 		//checkpoints
 		// _currentCheckpoint = (currentTask player);
 		// if(_currentCheckpoint != taskNull) then

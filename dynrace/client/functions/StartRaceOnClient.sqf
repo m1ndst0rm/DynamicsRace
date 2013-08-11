@@ -1,23 +1,21 @@
-/* DYN_RACE_StartRaceOnClient: Starts the race on a client.
+/* DYN_fnc_StartRaceOnClient: Starts the race on a client.
 * This function should NOT be called directly. Internal function.
 *
 */
-"DYN_RACE_StartRaceOnClient" call DYN_RACE_Debug;
-sleep 5;
+private ["_wait","_mustWait","_text","_i","_vehicle"];
+
+"DYN_fnc_StartRaceOnClient" call BIS_fnc_log;
+
+sleep 15;
 
 [] spawn
 {
 	waitUntil { DYN_RACE_STATE == "ONGOING" };
-	[] spawn DYN_RACE_SpawnLocalTimer;
+	[] spawn DYN_fnc_SpawnLocalTimer;
 	
 	if!(player getVariable ["isSpectator",false]) then
 	{
-		[] spawn DYN_RACE_SpawnLocalRaceChecks;
-		
-		if(DYN_RACE_TYPE == "DUAL") then
-		{
-			[] spawn DYN_RACE_SpawnLocalWeaponDir;
-		};
+		[] spawn DYN_fnc_SpawnLocalRaceChecks;
 	};
 };
 _wait = 0;
@@ -76,5 +74,9 @@ if!(player getVariable ["isSpectator",false]) then
 		_text = "<t align='center' valign='middle' size='2.0'>Guns unlocked!</t>";
 		[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
 	};
-	_vehicle call DYN_RACE_GunUnLock;
+	_vehicle call DYN_fnc_GunUnLock;
+	if(DYN_RACE_TYPE == "DUAL") then
+	{
+		[] spawn DYN_fnc_SpawnLocalWeaponDir;
+	};
 };

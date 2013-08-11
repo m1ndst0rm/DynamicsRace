@@ -1,4 +1,4 @@
-/* DYN_RACE_VoteDialog: Launch the dialog for voting
+/* DYN_fnc_VoteDialog: Launch the dialog for voting
 *
 */
 if(count _this > 0) then
@@ -8,16 +8,21 @@ if(count _this > 0) then
 
 if(DYN_RACE_STATE == "IDLE") then 
 {
-	if!(DYN_RACE_VOTEDIALOG_OPEN) then
+	if!(DYN_VOTEDIALOG_OPEN) then
 	{
-		disableSerialization;
-		closeDialog 4000;
-		DYN_RACE_VOTEDIALOG_OPEN = true;
-		createDialog "DYN_Diag";
-		
-		waitUntil {(!(isNull (findDisplay 4000)))};
-		_voteDisplay = findDisplay 4000;
-		_voteDisplay displayAddEventHandler ["KeyDown","_this call DYN_RACE_DisableClose;"];
+		private ["_voteDisplay","_total_racers"];
+		_total_racers = (if (isMultiplayer) then {{!(_x getVariable ["isSpectator", false])} count playableUnits} else {count switchableUnits});
+		if(_total_racers > 1) then
+		{
+			disableSerialization;
+			closeDialog 4000;
+			DYN_VOTEDIALOG_OPEN = true;
+			createDialog "DYN_Diag";
+			
+			waitUntil {(!(isNull (findDisplay 4000)))};
+			_voteDisplay = findDisplay 4000;
+			_voteDisplay displayAddEventHandler ["KeyDown","_this call DYN_fnc_DisableClose;"];
+		};
 	};
 };
 true;

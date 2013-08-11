@@ -1,7 +1,7 @@
-/* DYN_RACE_SpawnVehicleMove: Spawn a set of units and let them move from a to b
+/* DYN_fnc_SpawnVehicleMove: Spawn a set of units and let them move from a to b
  * Spawn vehicles and let the move from a to b. Can also spawn helis and boats.
  * 
- * [_vehicles_spawn_id, _vehiclesPerSpawn, _maxvehicles, _classname, _marker_name_from, _marker_name_to] call DYN_RACE_SpawnVehicleMove;
+ * [_vehicles_spawn_id, _vehiclesPerSpawn, _maxvehicles, _classname, _marker_name_from, _marker_name_to] call DYN_fnc_SpawnVehicleMove;
  * 
  * Parameters:
  * _vehicles_spawn_id: unique ID to identify vehicle spawn. Used to put a limit into spawned units
@@ -13,7 +13,9 @@
  * TODO: Change to DYN_RACE_SpawnVehicle
  */
 if (!isServer) exitWith {} ;
-"DYN_RACE_Spawn_Vehicle" call DYN_RACE_Debug;
+private ["_vehicles_spawn_id","_vehiclesPerSpawn","_maxvehicles","_classname","_marker_name_from","_marker_name_to","_marker_from","_marker_to","_vehicles","_vehicles_to_spawn","_cur_vehicle_spawn_pos","_cur_vehicle_spawn","_cur_vehicle_spawn_set","_map_vehicles","_i","_vehicle_spawn","_lcl_vehicle_spawn_id","_lcl_vehicles","_vehiclePosition","_vehicle"];
+
+"DYN_RACE_Spawn_Vehicle" call BIS_fnc_log;
 
 _vehicles_spawn_id = _this select 0;
 _vehiclesPerSpawn = _this select 1;
@@ -72,8 +74,6 @@ for [{_i = 0},{_i<_vehicles_to_spawn}, {_i=_i+1}] do
 		DYN_RACE_MAP_VEHICLES set [_cur_vehicle_spawn_pos, _cur_vehicle_spawn];
 	};
 };
-diag_log "Vehicles:";
-diag_log DYN_RACE_MAP_VEHICLES;
 _i = 0;
 {
 	_x doMove _marker_to;

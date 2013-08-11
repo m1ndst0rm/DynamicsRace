@@ -1,8 +1,9 @@
+private ["_z","_availableTargets","_racersCount","_i","_possibleTarget","_currentTargetPos"];
 if!(DYN_RACE_SWITCHINGPLAYER) then
 {
 	DYN_RACE_SWITCHINGPLAYER = true;
 
-	"DYN_RACE_SwitchPlayer" call DYN_RACE_Debug;
+	"DYN_RACE_SwitchPlayer" call BIS_fnc_log;
 	_z = _this select 1;
 
 	_availableTargets = [];
@@ -42,7 +43,21 @@ if!(DYN_RACE_SWITCHINGPLAYER) then
 	} 
 	else 
 	{
-		DYN_RACE_SPECTATOR_TARGET switchCamera "EXTERNAL";
+		if(player getVariable ["isCommander", false]) then
+		{
+			DYN_RACE_SPECTATOR_CAM setPos [((position DYN_RACE_SPECTATOR_TARGET) select 0), ((position DYN_RACE_SPECTATOR_TARGET) select 1), ((position DYN_RACE_SPECTATOR_TARGET) select 2) + 100];
+			//DYN_RACE_SPECTATOR_CAM setDir getDir DYN_RACE_SPECTATOR_TARGET;
+			//DYN_RACE_SPECTATOR_CAM setVectorDirAndUp [[0,0,-1],[0,1,0]];
+			DYN_RACE_SPECTATOR_CAM camSetTarget DYN_RACE_SPECTATOR_TARGET;
+			DYN_RACE_SPECTATOR_CAM camSetRelPos [0,0,100];
+			DYN_RACE_SPECTATOR_CAM cameraEffect ["external", "back"];
+			DYN_RACE_SPECTATOR_CAM camCommit 0;
+			DYN_RACE_SPECTATOR_CAM_FREELOOK = false;
+		}
+		else
+		{
+			DYN_RACE_SPECTATOR_TARGET switchCamera "EXTERNAL";
+		};
 	};
 	DYN_RACE_SWITCHINGPLAYER = false;
 	DYN_RACE_SPECTATOR_CAM camCommit 0;

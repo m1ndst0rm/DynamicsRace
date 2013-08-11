@@ -1,10 +1,11 @@
-/* DYN_RACE_OnRacersChanged: Function called when var DYN_RACE_RACERS is changed.
+/* DYN_fnc_OnRacersChanged: Function called when var DYN_RACE_RACERS is changed.
 * Will:
 * Update vehicle damageEnabled, player damageEnabled 
 * Enable or disable simulation on a vehicle (preventing it from moving)
 * Change vehicle textures & others
 */
-"DYN_RACE_OnRacersChanged" call DYN_RACE_Debug;
+private ["_local_racers","_racer","_player","_vehicle","_playerAllowDamage","_vehicleAllowDamage","_vehicleEnableSimulation","_vehicle_netId","_texture1","_texture2","_fuel"];
+"DYN_fnc_OnRacersChanged" call BIS_fnc_log;
 //Update local racer settings. 
 _local_racers = DYN_RACE_RACERS;
 
@@ -25,7 +26,7 @@ OffRoadTextures = ["\A3\soft_F\Offroad_01\Data\Offroad_01_ext_co.paa",  //red
 	
 	if(typeOf _vehicle == DYN_RACE_OFFROAD_CLASS) then
 	{
-		//format ["Setting anim of vehicle: %1. ", _vehicle_netId] call DYN_RACE_Debug;
+		//format ["Setting anim of vehicle: %1. ", _vehicle_netId] call BIS_fnc_log;
 		_vehicle animate ["HidePolice", _vehicle getVariable ["HidePolice", 1]];  
 		_vehicle animate ["HideServices", _vehicle getVariable ["HideServices", 1]];  
 		_vehicle animate ["HideBackpacks", _vehicle getVariable ["HideBackpacks", 1]];  

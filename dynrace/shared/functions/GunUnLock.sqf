@@ -1,8 +1,10 @@
-/* DYN_RACE_GunUnLock: Unlocks the gunners gun of a single vehicle or a group.
+/* DYN_fnc_GunUnLock: Unlocks the gunners gun of a single vehicle or a group.
 * 
-* Example1: _vehicle call DYN_RACE_GunUnLock;
-* Example2: thislist call DYN_RACE_GunUnLock; //Trigger
+* Example1: _vehicle call DYN_fnc_GunUnLock;
+* Example2: thislist call DYN_fnc_GunUnLock; //Trigger
 */
+private ["_vehicle","_magNames","_ammoLeft","_magNamesCount","_i","_lastNameInt"];
+
 if(typeName _this == "ARRAY") then
 {
 	{
@@ -19,15 +21,21 @@ else
 
 if (_vehicle getVariable ["gunLocked", false]) then
 {
-	_magNames = _vehicle getVariable "magNames";
-	_ammoLeft = _vehicle getVariable "lastMagCount";
-	_magNamesCount = count _magNames;
-	for [ {_i = 0}, {_i < (_magNamesCount)}, {_i = _i + 1}] do
-	{
-		_vehicle addMagazineTurret [_magNames select _i, [0]];
-	};
-	_lastNameInt = (count _magNames) - 1;
-
-	_vehicle setAmmo [currentweapon _vehicle, _ammoLeft];
+	_magazineInfo = _vehicle getVariable "magazineInfo";
+	{	
+		_magazine = _x;
+		
+		_loaded = false;//_magazine select 2;
+		if(_loaded) then
+		{
+			_ammoLeft = _magazine select 1;
+			_vehicle setAmmo [currentweapon _vehicle, _ammoLeft];
+		}
+		else
+		{
+			_magName = _magazine select 0;
+			_vehicle addMagazineTurret [_magName, [0]];
+		};
+	} foreach _magazineInfo;
 	_vehicle setVariable ["gunLocked", false, true];
 };

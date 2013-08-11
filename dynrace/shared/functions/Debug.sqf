@@ -1,9 +1,9 @@
-/* DYN_RACE_Debug: Display debug when debug mode is enabled
-* Displays debug when DYN_RACE_DEBUG_ENABLED = true;
+/* BIS_fnc_log: Display debug when debug mode is enabled
+* Displays debug when DYN_DEBUG_ENABLED = true;
 *
-* Example: ["Test"] call DYN_RACE_Debug;
+* Example: ["Test"] call BIS_fnc_log;
 */
-if(DYN_RACE_DEBUG_ENABLED) then
+if(DYN_DEBUG_ENABLED) then
 {
 	diag_log _this select 0;
 };

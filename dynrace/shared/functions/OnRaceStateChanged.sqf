@@ -1,7 +1,7 @@
-/* DYN_RACE_OnRaceStateChanged: Function called when the variable DYN_RACE_STATE switches state. 
+/* DYN_fnc_OnRaceStateChanged: Function called when the variable DYN_RACE_STATE switches state. 
 *
 */
-format ["Switching race state to %1", DYN_RACE_STATE] call DYN_RACE_Debug;
+format ["Switching race state to %1", DYN_RACE_STATE] call BIS_fnc_log;
 switch (DYN_RACE_STATE) do
 {
 	case "IDLE":
@@ -12,17 +12,17 @@ switch (DYN_RACE_STATE) do
 	{
 		if(isServer) then
 		{
-			[] call DYN_RACE_InitRace;
+			[] call DYN_fnc_InitRace;
 		};
 		if!(isDedicated) then
 		{
 			if(player getVariable ["isCommander", false]) then
 			{
-				[] spawn DYN_RACE_COM_InitialiseCommander;
+				[] spawn DYN_fnc_ComInitialiseCommander;
 			}
 			else
 			{	
-				[] spawn DYN_RACE_InitRaceOnClient;
+				[] spawn DYN_fnc_InitRaceOnClient;
 			};
 		};
 	};
@@ -30,17 +30,17 @@ switch (DYN_RACE_STATE) do
 	{ //Countdown timer
 		if(isServer) then
 		{
-			[] spawn DYN_RACE_StartRaceOnServer;
+			[] spawn DYN_fnc_StartRaceOnServer;
 		};
 		if!(isDedicated) then
 		{
 			if(player getVariable ["isCommander", false]) then
 			{
-				[] spawn DYN_RACE_COM_StartRaceAsCommander;
+				[] spawn DYN_fnc_ComStartRaceAsCommander;
 			}
 			else
 			{
-				[] spawn DYN_RACE_StartRaceOnClient;
+				[] spawn DYN_fnc_StartRaceOnClient;
 			}
 		};
 	};
@@ -52,13 +52,11 @@ switch (DYN_RACE_STATE) do
 	{
 		if(isServer) then
 		{
-			diag_log "Spawn race stop on server";
-			[] spawn DYN_RACE_StopRaceOnServer;
+			[] spawn DYN_fnc_StopRaceOnServer;
 		};
 		if!(isDedicated) then
 		{
-			diag_log "Spawn race stop on client";
-			[] spawn DYN_RACE_StopRaceOnClient;
+			[] spawn DYN_fnc_StopRaceOnClient;
 		};
 	};
 }; 

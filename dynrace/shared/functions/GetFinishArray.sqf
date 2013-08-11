@@ -7,7 +7,9 @@
 *			-2: T1: Player1, Player2,...
 *			-3: T1
 */
-_finished_players = call DYN_RACE_GetFinishedPlayers;
+private ["_finished_players","_finished_players_array","_formatOption","_racer","_playerName","_player","_finish_time","_formatted_time","_teamNumber","_displayName","_hasFinished","_finished_racer","_text"];
+
+_finished_players = call DYN_fnc_GetFinishedPlayers;
 _finished_players_array = [];
 
 _formatOption = 0;
@@ -22,15 +24,15 @@ if(count _this > 0) then
 	_playerName = _racer select 0;
 	_player = _racer select 1;
 	
-	_finish_time = [_racer] call DYN_RACE_GetRacerFinishedTime;
-	_formatted_time = [_finish_time] call DYN_RACE_FormatTime;
+	_finish_time = [_racer] call DYN_fnc_GetRacerFinishedTime;
+	_formatted_time = [_finish_time] call DYN_fnc_FormatTime;
 	
 	_teamNumber = _player getVariable ["teamNumber", -1];
 	
 	_displayName = _playerName;
 	if(DYN_RACE_TYPE != "SINGLE") then
 	{
-		_displayName = [_teamNumber, _formatOption] call DYN_RACE_GetTeamName;
+		_displayName = [_teamNumber, _formatOption] call DYN_fnc_GetTeamName;
 	};
 	
 	_finished_players_array set [count _finished_players_array, [_displayName, _formatted_time, true, _teamNumber]];
@@ -57,7 +59,7 @@ if(count _this > 0) then
 		_displayName = _playerName;
 		if(DYN_RACE_TYPE != "SINGLE") then
 		{
-			_displayName =  [_teamNumber, _formatOption] call DYN_RACE_GetTeamName;
+			_displayName =  [_teamNumber, _formatOption] call DYN_fnc_GetTeamName;
 		};
 		
 		_text = "DNF";

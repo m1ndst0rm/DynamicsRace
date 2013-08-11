@@ -1,5 +1,7 @@
-WEAPON_DIR_CHECK = 0.5;
-"DYN_RACE_SpawnLocalWeaponDir" call DYN_RACE_Debug;
+#define WEAPON_DIR_CHECK 0.5
+private ["_vehicle","_vehicleDir","_weapondirarray","_weaponDirection","_minAllowedDirection","_maxAllowedDirection"];
+
+"DYN_fnc_SpawnLocalWeaponDir" call BIS_fnc_Log;
 [] spawn {
 	DYN_RACE_VEHICLE_WEAPON_ALLOWED = true;
 	while{ (DYN_RACE_STATE == "ONGOING") } do 
@@ -22,14 +24,14 @@ WEAPON_DIR_CHECK = 0.5;
 					{
 						DYN_RACE_VEHICLE_WEAPON_ALLOWED = false;
 						
-						_vehicle call DYN_RACE_GunLock;
+						_vehicle call DYN_fnc_GunLock;
 					};
 				}
 				else
 				{
 					if!(DYN_RACE_VEHICLE_WEAPON_ALLOWED) then
 					{
-						_vehicle call DYN_RACE_GunUnLock;
+						_vehicle call DYN_fnc_GunUnLock;
 						DYN_RACE_VEHICLE_WEAPON_ALLOWED = true;
 					};
 				};

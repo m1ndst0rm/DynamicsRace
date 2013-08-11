@@ -1,3 +1,4 @@
+private ["_commander","_nearestRacer","_racer","_player","_vehicle","_sameTeam","_commader"];
 _commander = _this select 0;
 _pos = _this select 1;
 
@@ -9,8 +10,7 @@ _nearestRacer = objNull;
 	
 	_sameTeam = false;
 	
-	if ((_player getVariable ["teamNumber", -1] == _commader getVariable ["teamNumber", 0])
-	|| _player getVariable ["isCop", false]) then
+	if ((_player getVariable ["teamNumber", -1] == _commander getVariable ["teamNumber", 0]) || _player getVariable ["isCop", false]) then
 	{
 		_sameTeam = true;
 	};

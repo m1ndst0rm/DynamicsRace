@@ -1,10 +1,11 @@
-/* DYN_RACE_StartRaceOnServer: Starts the race on the server.
+/* DYN_fnc_StartRaceOnServer: Starts the race on the server.
 * This function should NOT be called directly. Internal function.
 *
 */
 if (!isServer) exitWith {};
-"DYN_RACE_StartRaceOnServer" call DYN_RACE_Debug;
-sleep 15;
+private ["_racer_count","_i","_racer","_player","_mustWait","_sleep"];
+"DYN_fnc_StartRaceOnServer" call BIS_fnc_log;
+sleep 25;
 
 DYN_RACE_STARTTIME = diag_tickTime;
 publicVariable "DYN_RACE_STARTTIME";
@@ -43,13 +44,13 @@ for [ {_i = 0}, {_i < _racer_count}, {_i = _i + 1}] do
 
 //This call actually makes sure the players vehicle is enabled.
 DYN_RACE_STATE = "ONGOING";
-[] spawn DYN_RACE_SpawnServerRaceChecks;
+[] spawn DYN_fnc_SpawnServerRaceChecks;
 
 publicVariable "DYN_RACE_STATE";
 publicVariable "DYN_RACE_RACERS";
 
-[] call DYN_RACE_OnRaceStateChanged;
-[] call DYN_RACE_OnRacersChanged;
+[] call DYN_fnc_OnRaceStateChanged;
+[] call DYN_fnc_OnRacersChanged;
 
 _sleep = 10;
 if(DYN_RACE_TYPE == "CAT&MOUSE") then
@@ -65,4 +66,4 @@ for [ {_i = 0}, {_i < _racer_count}, {_i = _i + 1}] do
 };
 
 publicVariable "DYN_RACE_RACERS";
-[] call DYN_RACE_OnRacersChanged;
+[] call DYN_fnc_OnRacersChanged;

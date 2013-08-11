@@ -1,3 +1,4 @@
+private ["_dialog","_list","_item","_spotlist","_selectedIndex","_team","_teamSpots","_teamSpot","_spotType","_spotAmount","_players","_spotName","_i","_wholeName"];
 disableSerialization;
 _dialog = findDisplay 4010;
 _list = _dialog displayCtrl 4011;

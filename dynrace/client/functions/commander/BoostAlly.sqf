@@ -1,17 +1,18 @@
+private ["_commander","_duration","_intesity","_vehicle","_maxSpeed","_speed","_sleep","_velIncrease","_i","_diff","_vel","_dir","_dvelIncrease"];
 //TODO: Fix it so it only works on friendly
 _commander = (_this select 0) select 0;
 _pos = (_this select 0) select 1;
 _duration = _this select 1;
 _intesity = _this select 2;
 
-_vehicle = [player,_pos] call DYN_RACE_NearestFriendlyRacer;
+_vehicle = [player,_pos] call DYN_fnc_NearestFriendlyRacer;
 if!(isNull _vehicle) then
 {
 	_maxSpeed = getNumber(configFile >> "CfgVehicles" >> typeOf _vehicle >> "maxSpeed");
 
 	_speed = speed _vehicle;
 	_sleep = 0.01;
-	_velIncrease = (0.2) * _intesity;
+	_velIncrease = (1) * _intesity;
 	_to = _duration / _sleep;
 	for [{_i=0},{_i <= _to},{_i=_i+1}] do 
 	{

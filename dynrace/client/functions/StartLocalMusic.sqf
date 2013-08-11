@@ -1,9 +1,10 @@
-/* DYN_RACE_StartLocalMusic: Starts a local song (so a trigger can start a sound/sound without all the clients hearing it)
+/* DYN_fnc_StartLocalMusic: Starts a local song (so a trigger can start a sound/sound without all the clients hearing it)
 *
-* Example: [thislist, "music_name"] call DYN_RACE_StartLocalMusic;
-* Example 2: [[player]], "music_name"] call DYN_RACE_StartLocalMusic;
+* Example: [thislist, "music_name"] call DYN_fnc_StartLocalMusic;
+* Example 2: [[player]], "music_name"] call DYN_fnc_StartLocalMusic;
 */
-"DYN_RACE_StartLocalMusic" call DYN_RACE_Debug;
+private ["_playerList","_musicName","_object","_player"];
+"DYN_fnc_StartLocalMusic" call BIS_fnc_log;
 _playerList = _this select 0;
 {
 	//_x setcaptive true;

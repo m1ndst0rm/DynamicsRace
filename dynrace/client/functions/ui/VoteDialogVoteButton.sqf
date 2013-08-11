@@ -1,7 +1,8 @@
-/* DYN_RACE_VoteDialogVoteButton: Action handler called when a player pres the Vote button.
+/* DYN_fnc_VoteDialogVoteButton: Action handler called when a player pres the Vote button.
 *
 */
-"DYN_RACE_VoteDialogVoteButton" call DYN_RACE_Debug;
+private ["_dialog","_list","_item","_oldVoteType"];
+"DYN_fnc_VoteDialogVoteButton" call BIS_fnc_log;
 if(DYN_RACE_STATE == "IDLE") then 
 {
 	disableSerialization;
@@ -12,7 +13,7 @@ if(DYN_RACE_STATE == "IDLE") then
 	if(isNil {_item}) then {_item = 0;};
 	_item = lbData[4001,_item];
 
-	DYN_RACE_VOTEDIALOG_OPEN = false;
+	DYN_VOTEDIALOG_OPEN = false;
 	closeDialog 4000;
 	//player setVariable [DYN_RACE_VOTE_TYPE, _item, true];
 	
@@ -22,39 +23,27 @@ if(DYN_RACE_STATE == "IDLE") then
 	{
 		case "RACETYPE":
 		{
-			[[netId player, DYN_RACE_VOTE_TYPE_CLIENT, _item],"DYN_RACE_ProcessClientVote", false] spawn BIS_fnc_MP;
+			[[netId player, DYN_RACE_VOTE_TYPE_CLIENT, _item],"DYN_fnc_ProcessClientVote", false] call BIS_fnc_MP;
 			waitUntil { !(isNil {DYN_RACE_TYPE}) && {DYN_RACE_TYPE != ""}};
 			if(DYN_RACE_TYPE != "COPS&ROBBERS") then
 			{
-				[] spawn DYN_RACE_VoteDialog;
+				[] spawn DYN_fnc_VoteDialog;
 			}
-			else
-			{	//Spawn team selection
-				[] spawn DYN_RACE_TeamSelectionDialog;
-			};
 		};
 		case "DAMAGETYPE":
 		{
-			[[netId player, DYN_RACE_VOTE_TYPE_CLIENT, _item],"DYN_RACE_ProcessClientVote", false] spawn BIS_fnc_MP;
+			[[netId player, DYN_RACE_VOTE_TYPE_CLIENT, _item],"DYN_fnc_ProcessClientVote", false] call BIS_fnc_MP;
 			sleep 2;
 			if(DYN_RACE_TYPE != "CAT&MOUSE") then
 			{
 				DYN_RACE_VOTE_TYPE_CLIENT = "VEHICLETYPE";
-				[] spawn DYN_RACE_VoteDialog;
+				[] spawn DYN_fnc_VoteDialog;
 			}
-			else
-			{
-				[] spawn DYN_RACE_TeamSelectionDialog;
-			};
 		};
 		case "VEHICLETYPE":
 		{
 			//Stahp.
-			[[netId player, DYN_RACE_VOTE_TYPE_CLIENT, _item],"DYN_RACE_ProcessClientVote", false] spawn BIS_fnc_MP;
-			if(DYN_RACE_TYPE != "SINGLE") then
-			{
-				[] spawn DYN_RACE_TeamSelectionDialog;
-			};
+			[[netId player, DYN_RACE_VOTE_TYPE_CLIENT, _item],"DYN_fnc_ProcessClientVote", false] call BIS_fnc_MP;
 		};
 	};
 }

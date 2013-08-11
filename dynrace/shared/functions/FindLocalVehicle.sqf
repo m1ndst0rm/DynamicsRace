@@ -6,6 +6,7 @@
 * Returns:
 * vehicle: returns a local vehicle object
 */
+hintc "DEPRECATED";
 DYN_RACE_FindLocalVehicle =
 {
 	_vehicle_net_id = _this select 0;

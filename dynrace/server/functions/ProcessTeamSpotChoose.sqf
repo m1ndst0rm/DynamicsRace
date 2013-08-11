@@ -1,5 +1,7 @@
 //Process a clients request to join a role in a team, and aknowlegde it if it's free. 
-"ProcessTeamSpotChoose" call DYN_RACE_Debug;
+private ["_player","_teamId","_spotType","_currentTeamId","_currentTeam","_spotTypes","_teamPlayers","_spot","_players","_global_changed","_team","_i","_spotName","_spots"];
+
+"ProcessTeamSpotChoose" call BIS_fnc_log;
 
 _player = _this select 0;
 _teamId = _this select 1;
@@ -31,10 +33,8 @@ if(DYN_RACE_STATE == "IDLE") then
 		_player setVariable ["teamNumber", -1, true];
 		DYN_RACE_TEAMS set [_currentTeamId, _currentTeam];
 		
-		diag_log "Publishing new teams";
-		diag_log DYN_RACE_TEAMS;
 		publicVariable "DYN_RACE_TEAMS";
-		[] spawn DYN_RACE_OnTeamsChanged;
+		[] spawn DYN_fnc_OnTeamsChanged;
 	};
 
 	_global_changed = false;
@@ -74,7 +74,7 @@ if(DYN_RACE_STATE == "IDLE") then
 		publicVariable "DYN_RACE_TEAMS";
 		if!(isDedicated) then
 		{
-			[] spawn DYN_RACE_OnTeamsChanged;
+			[] spawn DYN_fnc_OnTeamsChanged;
 		};
 		if!(DYN_RACE_TEAMCHOOSE_COUNTDOWN_STARTED) then
 		{
@@ -85,24 +85,24 @@ if(DYN_RACE_STATE == "IDLE") then
 				publicVariable "DYN_RACE_CHAT";
 				if!(isDedicated) then
 				{
-					[] call DYN_RACE_OnChatChange;
+					[] call DYN_fnc_OnChatChange;
 				};
-				sleep 15;
+				sleep 2;
 				DYN_RACE_CHAT = "15 seconds to choose a team and role.";
 				publicVariable "DYN_RACE_CHAT";
 				if!(isDedicated) then
 				{
-					[] call DYN_RACE_OnChatChange;
+					[] call DYN_fnc_OnChatChange;
 				};
-				sleep 10;
+				sleep 2;
 				DYN_RACE_CHAT = "5 seconds to choose a team and role.";
 				publicVariable "DYN_RACE_CHAT";
 				if!(isDedicated) then
 				{
-					[] call DYN_RACE_OnChatChange;
+					[] call DYN_fnc_OnChatChange;
 				};
-				sleep 5;
-				[] call DYN_RACE_StartRace;
+				sleep 1;
+				[] call DYN_fnc_StartRace;
 			};
 		};
 	};

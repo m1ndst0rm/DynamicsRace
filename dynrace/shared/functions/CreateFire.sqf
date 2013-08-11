@@ -1,16 +1,17 @@
 //TODO: Fix
-/* DYN_RACE_CreateFire: Creates fire on given mark names
+/* DYN_fnc_CreateFire: Creates fire on given mark names
 * Creates fire on given marker(s) but limits the fire to 1 per marker per 15 seconds (mulitple players hitting a trigger wont create multiple fires)
 *
-* Example: [10, 3, "marker_1"] call DYN_RACE_CreateFire;
-* Example: [30, 10, "marker_1", "marker_2", ...] call DYN_RACE_CreateFire;
+* Example: [10, 3, "marker_1"] call DYN_fnc_CreateFire;
+* Example: [30, 10, "marker_1", "marker_2", ...] call DYN_fnc_CreateFire;
 * params:
 * int : _duration
 * int: _intensity (0.8 >= x <= 10)
 * string : _markername
 */
 if (!isServer) exitWith {};
-"DYN_RACE_Fire" call DYN_RACE_Debug;
+private ["_duration","_intensity","_markername","_markers","_duraction","_i","_fires","_marker","_dummy"];
+"DYN_RACE_Fire" call BIS_fnc_log;
 
 _markers = [];
 _duraction = _this select 0;

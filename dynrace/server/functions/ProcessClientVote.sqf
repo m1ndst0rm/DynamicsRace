@@ -1,8 +1,9 @@
-/* DYN_RACE_ProcessClientVote: Process client vote
+/* DYN_fnc_ProcessClientVote: Process client vote
 
 */
 if (!isServer) exitWith {} ;
-"DYN_RACE_ProcessClientVote" call DYN_RACE_Debug;
+private ["_clientId","_voteType","_vote","_votePoint","_player_vote","_vote_array","_vote_array_point","_vote_array_vote","_maxVoteCount","_currentVoteCount","_racer_vote","_compareRacteType","_voteText"];
+"DYN_fnc_ProcessClientVote" call BIS_fnc_log;
 if(DYN_RACE_STATE == "IDLE") then
 {
 	_clientId = _this select 0;
@@ -42,7 +43,8 @@ if(DYN_RACE_STATE == "IDLE") then
 	};
 	
 
-	_maxVoteCount = (if (isMultiplayer) then {count playableUnits} else {1});
+	_maxVoteCount = (if (isMultiplayer) then {{isPlayer _x}count playableUnits} else {1});
+	
 	_currentVoteCount = 0;
 	
 	{
@@ -65,7 +67,6 @@ if(DYN_RACE_STATE == "IDLE") then
 					_compareRacteType = "VEHICLETYPE";
 				};
 			};
-			diag_log format ["Vote: %1, CompareType: %2", _vote select 0, _compareRacteType];
 			if(_vote select 0 == _compareRacteType) then
 			{
 				_currentVoteCount = _currentVoteCount + 1;
@@ -77,7 +78,7 @@ if(DYN_RACE_STATE == "IDLE") then
 	
 	if(_maxVoteCount == _currentVoteCount) then
 	{
-		[] call DYN_RACE_ProcessVotes;
+		[] call DYN_fnc_ProcessVotes;
 	}
 	else
 	{
@@ -102,7 +103,7 @@ if(DYN_RACE_STATE == "IDLE") then
 				publicVariable "DYN_RACE_CHAT";
 				if!(isDedicated) then
 				{
-					[] call DYN_RACE_OnChatChange;
+					[] call DYN_fnc_OnChatChange;
 				};
 				sleep 15;
 				
@@ -112,7 +113,7 @@ if(DYN_RACE_STATE == "IDLE") then
 					publicVariable "DYN_RACE_CHAT";
 					if!(isDedicated) then
 					{
-						[] call DYN_RACE_OnChatChange;
+						[] call DYN_fnc_OnChatChange;
 					};
 					sleep 15;
 					DYN_RACE_CHAT = "";
@@ -121,7 +122,7 @@ if(DYN_RACE_STATE == "IDLE") then
 				
 				if (!DYN_RACE_PROCESSING_VOTES && DYN_RACE_STATE == "IDLE" && count DYN_RACE_TEAMS == 0) then
 				{
-					[] call DYN_RACE_ProcessVotes;
+					[] call DYN_fnc_ProcessVotes;
 				};
 			};
 		};
