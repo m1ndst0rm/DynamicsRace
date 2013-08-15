@@ -148,14 +148,10 @@ switch (_vote_type) do
 
 		DYN_RACE_CHAT = _message;
 		
+		_startTeamVote = true;
 		if(DYN_RACE_TYPE == "SINGLE") then
 		{
 			_startRace = true;
-			_startTeamVote = true;
-		}
-		else
-		{
-			_startTeamVote = true;
 		};
 	};
 };

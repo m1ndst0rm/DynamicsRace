@@ -17,8 +17,13 @@ else
 		DYN_RACE_SPECTATOR_CAM camSetTarget DYN_RACE_SPECTATOR_TARGET;
 		DYN_RACE_SPECTATOR_CAM camSetRelPos [0,0,100];
 		DYN_RACE_SPECTATOR_CAM cameraEffect ["external", "back"];
-		//DYN_RACE_SPECTATOR_CAM setVectorDirAndUp [[0,0,-1],[0,1,0]];
+		DYN_RACE_SPECTATOR_CAM setVectorUp [0,0.99,0.01];
 		DYN_RACE_SPECTATOR_CAM camCommit 0;
+		// DYN_RACE_SPECTATOR_CAM_FREELOOK = false;
+		// DYN_RACE_SPECTATOR_CAM camSetTarget DYN_RACE_SPECTATOR_TARGET;
+		// DYN_RACE_SPECTATOR_CAM camSetRelPos [0,-1,100];
+		// DYN_RACE_SPECTATOR_CAM cameraEffect ["external", "back"];
+		// DYN_RACE_SPECTATOR_CAM camCommit 0;
 	}
 	else
 	{

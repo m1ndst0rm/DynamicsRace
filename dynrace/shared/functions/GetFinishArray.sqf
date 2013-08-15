@@ -8,16 +8,10 @@
 *			-3: T1
 */
 private ["_finished_players","_finished_players_array","_formatOption","_racer","_playerName","_player","_finish_time","_formatted_time","_teamNumber","_displayName","_hasFinished","_finished_racer","_text"];
+_formatOption = [_this, 0, 0] call bis_fnc_param;
 
 _finished_players = call DYN_fnc_GetFinishedPlayers;
 _finished_players_array = [];
-
-_formatOption = 0;
-if(count _this > 0) then
-{
-	_formatOption = _this select 0;
-};
-
 {
 	_racer = _x;
 	

@@ -152,33 +152,40 @@ if(DYN_RACE_TYPE == "COPS&ROBBERS") then
 
 //AI waypoint handling
 [] spawn {
-	_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
-	if ({ !(isPlayer _x)} count _units > 0) then
+	if ({ !(isPlayer _x)} count DYN_RACE_AVAILABLERACERS > 0) then
 	{
+		_aiDrivers = [];
+		{
+			_unit = _x;
+			if!(isPlayer _unit && _unit getVariable ["isDriver", false]) then
+			{
+				_aiDrivers set [count _aiDrivers, _unit];
+			};
+		} foreach DYN_RACE_AVAILABLERACERS;
+		
+	
 		while {DYN_RACE_STATE == "ONGOING"} do
 		{
 			{
 				_unit = _x;
-				if!(isPlayer _unit) then
+
+				_currentWayPointId = currentWaypoint (group _unit);
+				if((_currentWayPointId - 1) != _unit getVariable "currentWaypointId") then
 				{
-					_currentWayPointId = currentWaypoint (group _unit);
-					if((_currentWayPointId - 1) != _unit getVariable "currentWaypointId") then
-					{
-						_unit setVariable ["currentWaypointId", _currentWayPointId - 1, true];
-					};
-					
-					_previousWaypoint = _currentWayPointId - 1;
-					if(_previousWaypoint < 0) then
-					{
-						_previousWaypoint =  (count DYN_RACE_CHECKPOINTS) - 1;
-					};
-					
-					_previousCheckpointDestination = waypointPosition [(group _unit), _previousWaypoint];
-					_previousWayPointDistance = _unit distance _previousCheckpointDestination;
-					
-					_unit setVariable ["previousWaypointDistance", _previousWayPointDistance, true];
+					_unit setVariable ["currentWaypointId", _currentWayPointId - 1, true];
 				};
-			} foreach _units;
+				
+				_previousWaypoint = _currentWayPointId - 1;
+				if(_previousWaypoint < 0) then
+				{
+					_previousWaypoint =  (count DYN_RACE_CHECKPOINTS) - 1;
+				};
+				
+				_previousCheckpointDestination = waypointPosition [(group _unit), _previousWaypoint];
+				_previousWayPointDistance = _unit distance _previousCheckpointDestination;
+				
+				_unit setVariable ["previousWaypointDistance", _previousWayPointDistance, true];
+			} foreach _aiDrivers;
 			sleep 1;
 		};	
 	};

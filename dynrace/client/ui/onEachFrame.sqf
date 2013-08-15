@@ -2,11 +2,13 @@
 //onEachFrame
 addMissionEventHandler ["Draw3D", 
 {
-	if(DYN_RACE_STATE == "ONGOING" || DYN_RACE_STATE == "INIT" ||  DYN_RACE_STATE == "STARTING") then
+	if(DYN_RACE_STATE != "IDLE" && DYN_RACE_TYPE != "CAT&MOUSE") then
 	{
 		//Player names
+		_racerCount = count DYN_RACE_RACERS;
+		_i= 0; for "_i" from 0 to (_racerCount - 1) do
 		{
-			_racer = _x;
+			_racer = DYN_RACE_RACERS select _i;
 			_player = _racer select 1;
 			if(_player getVariable ["isDriver", false] && !(_player getVariable["isCop", false]) && vehicle player != vehicle _player) then
 			{
@@ -48,55 +50,6 @@ addMissionEventHandler ["Draw3D",
 					};
 				};
 			};
-		} foreach DYN_RACE_RACERS;
-		// if(player getVariable ["isCommander", false]) then
-		// {
-			// if(DYN_RACE_SPEC_ENABLED) then
-			// {
-				// _color = [1,0,0,1];
-				// if(count DYN_RACE_COMMANDER_SELECTED_ACTION > 0) then
-				// {
-					// _action_cost = DYN_RACE_COMMANDER_SELECTED_ACTION select 5; 
-					// if(_action_cost <= DYN_RACE_COMMANDER_RESOURCEPOINTS) then
-					// {
-						// //Green
-						// _color = [0,1,0,1];
-					// };
-				// };
-				
-				// _playerPos = getPosATL DYN_RACE_SPECTATOR_CAM;
-				// drawIcon3D [
-					// "\a3\ui_f\data\IGUI\Cfg\TacticalDisplay\targettexture_gs.paa",
-					// _color,
-					// [_playerPos select 0,_playerPos select 1,2.3],
-					// 2,
-					// 2,
-					// direction DYN_RACE_SPECTATOR_CAM,
-					// "",
-					// 0,
-					// 0.03,
-					// "PuristaMedium"
-				// ];
-			// };
-		// };
-		//checkpoints
-		// _currentCheckpoint = (currentTask player);
-		// if(_currentCheckpoint != taskNull) then
-		// {
-			// _currentCheckpointDestination = taskDestination _currentCheckpoint;
-			// _distance = (_currentCheckpointDestination distance player);
-			// if(_distance < 250) then
-			// {
-				// _text = "Checkpoint";
-				// _textSize = (0.1) - (0.1 * _distance / 250);
-				// _currentCheckpointId = (simpleTasks player) find _currentCheckpoint;
-				// if(_currentCheckpointId == count DYN_RACE_CHECKPOINTS - 1) then
-				// {
-					// _text = "FINISH";
-				// };
-				// _currentCheckpointDestination = [_currentCheckpointDestination select 0, _currentCheckpointDestination select 1, 3];
-				// drawIcon3D ["", [1,1,1,1], _currentCheckpointDestination, 0, 0, 0, _text, 0,_textSize];
-			// };
-		// };
+		};
 	};
 }];

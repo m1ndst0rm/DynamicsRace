@@ -3,8 +3,8 @@
 private ["_total_racers","_teams","_i","_teamName","_team","_unevenPlayers","_robbers","_cops","_commanders","_racers","_chasers"];
 
 DYN_RACE_TEAMS = [];
-//_units = 
-_total_racers = (if (isMultiplayer) then {{!(_x getVariable ["isSpectator", false])} count playableUnits} else {count switchableUnits});
+DYN_RACE_AVAILABLERACERS = [] call DYN_fnc_GetAvailableRacers;
+_total_racers = count DYN_RACE_AVAILABLERACERS;
 
 switch (DYN_RACE_TYPE) do
 {
@@ -34,7 +34,7 @@ switch (DYN_RACE_TYPE) do
 			// teamName = "Commander";
 			// _team = [_teamName, [["COMMANDER", 1,[]]],[]];
 			// DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
-			teamName = "Commanders";
+			_teamName = "Commanders";
 			_team = [_teamName, [["COMMANDER", 1,[]]],[]];
 			DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 		};
@@ -51,7 +51,7 @@ switch (DYN_RACE_TYPE) do
 		
 		if(_total_racers % 2 != 0) then
 		{ //Uneven teams =(
-			teamName = "Commander";
+			_teamName = "Commander";
 			_team = [_teamName, [["COMMANDER", 1,[]]],[]];
 			DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 		};
@@ -122,33 +122,57 @@ switch (DYN_RACE_TYPE) do
 	{
 		if(DYN_RACE_EXTRA_COM) then
 		{
-			_teams = floor (_total_racers / 4);
+			//1 mouse, 1 commanders and 2 (or more) cats.
+			_teamsOriginal = floor (_total_racers / 4);
+			_teams = 6 min _teamsOriginal;
+						
+			_catsPerTeam = 2;
+			
 			_unevenPlayers = _total_racers % 4;
+			if(_teams != _teamsOriginal) then
+			{	//More then 6 * 3 players
+				_toManyPlayers = _total_racers % 24;
+				_addPerTeam = floor(_toManyPlayers / 6);
+				_catsPerTeam = _catsPerTeam + _addPerTeam;
+				
+				_unevenPlayers = _toManyPlayers % 6;
+			};
 			
 			_i= 0; for "_i" from 0 to (_teams - 1) do
 			{
-				_teamName = format ["Team %1", _i + 1];
+				_teamName = DYN_RACE_CATROBBERSTEAMNAMES select _i;
 				_commanders = 1;
 				if(_i < _unevenPlayers) then
 				{
 					_commanders = 2;
 				};
-				_team = [_teamName, [["MOUSE", 1,[]],["CAT", 2,[]],["COMMANDER", _commanders,[]]],[]];
+				_team = [_teamName, [["MOUSE", 1,[]],["CAT", _catsPerTeam,[]],["COMMANDER", _commanders,[]]],[]];
 				DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
 			};
 		}
 		else
 		{
 			//Each team has Cat & 2 mice = 3 drivers.
-			_teams = floor (_total_racers / 3);
-			_i= 0; for "_i" from 0 to (_teams - 1) do
-			{
-				_teamName = format ["Team %1", _i + 1];
-				_team = [_teamName, [["MOUSE", 1,[]],["CAT", 2,[]]],[]];
-				DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
+			_teamsOriginal = floor (_total_racers / 3);
+			_teams = 6 min _teamsOriginal;
+			
+			_catsPerTeam = 2;
+			_unevenPlayers = _total_racers % 3;
+			if(_teams != _teamsOriginal) then
+			{	//More then 6 * 3 players
+				_toManyPlayers = _total_racers % 18;
+				_addPerTeam = floor(_toManyPlayers / 6);
+				_catsPerTeam = _catsPerTeam + _addPerTeam;
+				
+				_unevenPlayers = _toManyPlayers % 6;
 			};
 			
-			_unevenPlayers = _total_racers % 3;
+			_i= 0; for "_i" from 0 to (_teams - 1) do
+			{
+				_teamName = DYN_RACE_CATROBBERSTEAMNAMES select _i;
+				_team = [_teamName, [["MOUSE", 1,[]],["CAT", _catsPerTeam,[]]],[]];
+				DYN_RACE_TEAMS set [count DYN_RACE_TEAMS, _team];
+			};
 			
 			if(_unevenPlayers != 0) then
 			{

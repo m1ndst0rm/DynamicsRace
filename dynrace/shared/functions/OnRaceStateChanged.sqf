@@ -12,10 +12,11 @@ switch (DYN_RACE_STATE) do
 	{
 		if(isServer) then
 		{
-			[] call DYN_fnc_InitRace;
+			[] spawn DYN_fnc_InitRace;
 		};
 		if!(isDedicated) then
 		{
+			waitUntil {DYN_RACE_INITPREPDONE};
 			if(player getVariable ["isCommander", false]) then
 			{
 				[] spawn DYN_fnc_ComInitialiseCommander;

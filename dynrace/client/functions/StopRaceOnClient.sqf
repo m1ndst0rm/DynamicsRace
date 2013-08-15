@@ -6,6 +6,8 @@ private ["_vehicle","_speed","_diff","_vel","_dir"];
 "DYN_fnc_StopRaceOnClient" call BIS_fnc_log;
 
 (finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_RESET];
+(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_TURBOKEYPRESS];
+(finddisplay 46) displayRemoveEventHandler ["keyup", DYN_RACE_HANLDER_TURBOKEYRELEASE];
 
 //Incase player hasn't stopped (didn't finish the race).
 if(player getVariable ["isDriver",false]) then

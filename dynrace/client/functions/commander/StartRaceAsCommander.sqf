@@ -1,6 +1,5 @@
 private ["_i","_text","_targetter","_color","_action_cost"];
-sleep 15;
-
+sleep 5;
 for [{_i = 10},{_i>0}, {_i=_i-1}] do 
 {
 	_text = format["<t align='center' valign='middle' size='1.8'>%1</t>", _i];

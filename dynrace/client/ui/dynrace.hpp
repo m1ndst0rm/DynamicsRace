@@ -289,7 +289,7 @@ class DYN_TeamSelectionDiag
 		
 		class ButtonChoose : DYN_RscButtonMenu 
 		{
-			idc = -1;
+			idc = 4014;
 			text = "Join role";
 			onButtonClick = "[] spawn DYN_fnc_TeamSelectionDialogJoinButton;";
 			x = 0.5 - (0.275) + (0.075 / 2) + (0.275 / 2); y = 0.5 + (0.340 /2);
@@ -435,7 +435,7 @@ class DYN_CommanderDiag
 		{
 			idc = 4032;
 			colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
-			text = "Vote";
+			text = "Commander Actions";
 			sizeEx = 0.04;
 			x = 0.5 - (0.275); y = 0.5 - (0.340 /2) - 0.05;
 			w = 0.275 * 2; h = 0.04;
@@ -514,6 +514,47 @@ class RscPicture
 	shadow = 0;
 };
 
+class DYN_RscPositionText : DYN_RscText
+{
+	idc = -1;
+	colorBackground[] = {0.2,0.2,0.2,1};
+	colorText[] = {0.45, 0.45, 0.45, 1};
+	text = "";
+	sizeEx = 0.04;
+	x = safezoneX + safezoneW - 0.29; 
+	w = 0.25; h = 0.05;
+	font = "puristaMedium";
+	shadow = 0;
+};
+
+class DYN_RscPositionNumberText : DYN_RscText
+{
+	idc = -1;
+	colorBackground[] = {0, 0, 0, 1};
+	colorText[] = {0.45, 0.45, 0.45, 1};
+	text = "";
+	sizeEx = 0.04;
+	x = safezoneX + safezoneW - 0.32; 
+	w = 0.03; h = 0.05;
+	font = "puristaMedium";
+	shadow = 0;
+};
+
+class RscProgress
+{
+	access = 0;
+	type = 8;
+	style = 0;
+	colorFrame[] = {1,1,1,1};
+	colorBar[] = {1,1,1,1};
+	texture = "#(argb,8,8,3)color(1,1,1,1)";
+	w = 1.2;
+	h = 0.03;
+	shadow = 0;
+};
+
+class RscMapControl;
+
 class rscTitles
 {
 	class DYN_COMTARGETDiag
@@ -559,15 +600,15 @@ class rscTitles
 		onUnLoad = "uiNamespace setVariable ['DYN_INFODIAG', nil]";
 		class controls
 		{
-			class RaceInfo : DYN_RscStructuredText
+			class CommanderInfo : DYN_RscStructuredText
 			{
 				idc = 4051;
 				style = ST_LEFT;
 				colorBackground[] = {0,0,0,0.5};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
 				text = "";
 				sizeEx = 0.08;
-				x = safezoneX + safezoneW - 0.3; y = 0;
-				w = 0.25; h = 0.5;
+				x = safezoneX + safezoneW * 0.01; y = safezoneY + 0.2;
+				w = 0.25; h = 0.2;
 			};
 			
 			class Position : DYN_RscStructuredText
@@ -577,7 +618,7 @@ class rscTitles
 				colorBackground[] = {0,0,0,0};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
 				text = "";
 				sizeEx = 0.08;
-				x = safezoneX + 0.35; y = safezoneY + 0.02;
+				x = safezoneX + safezoneW * 0.01; y = safezoneY + 0.2;
 				w = 0.3; h = 0.1;
 			};
 			
@@ -585,11 +626,163 @@ class rscTitles
 			{
 				idc = 4053;
 				style = ST_LEFT;
-				colorBackground[] = {0,0,0,0,};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+				colorBackground[] = {0,0,0,0};//{"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+				colorText[] = {0.45, 0.45, 0.45, 1};
 				text = "";
 				sizeEx = 0.5;
-				x = safezoneX + 0.35; y = safezoneY + 0.1;
-				w = 0.1; h = 0.1;
+				x = safezoneX + safezoneW * 0.01; y = safezoneY + 0.3;
+				w = 0.21; h = 0.03;
+			};
+			
+			// class ProgressBar : RscProgress
+			// {
+				// idc = 4054;
+				// colorFrame[] = {0,0,0,1};
+				// colorBar[] = {0.45, 0.45, 0.45,1};
+				// x = safezoneX + 1; y = safezoneY + 0.05;
+				// w = safezoneW - 2 * 1;
+				// h = 0.03;
+			// };
+			
+			// class Map : RscMapControl 
+			// {
+				// idc = 4055;
+				// x = safezoneX + 0.02 * safezoneW);
+				// y = safezoneY + 1 * safezoneH;
+				// w = safezoneW * 0.16;
+				// h = safezoneH * 0.16;
+				// type = 101; // Use 100 to hide markers
+				// style = 48;
+				// colorLevels[] = {0.65, 0.6, 0.55, 1};
+				// colorSea[] = {0.46, 0.65, 0.74, 0.5};
+				// colorForest[] = {0.02, 0.5, 0.01, 0.3};
+				// colorForestBorder[] = {0.02, 0.5, 0.01, 0.27};
+				// colorRocks[] = {0, 0, 0, 0.3};
+				// colorCountlines[] = {0.65, 0.45, 0.27, 0.70};
+				// colorMainCountlines[] = {1, 0.1, 0.1, 0.9};
+				// colorCountlinesWater[] = {0.25, 0.4, 0.5, 0.3};
+				// colorMainCountlinesWater[] = {0.25, 0.4, 0.5, 0.9};
+				// colorPowerLines[] = {0.1, 0.1, 0.1, 1};
+				// colorRailWay[] = {0.8, 0.2, 0, 1};
+				
+				// colorRocksBorder[] = {0, 0, 0, 0};
+				// colorNames[] = {0.1, 0.1, 0.1, 0.9};
+				// colorInactive[] = {1, 1, 1, 0.5};
+				
+				// colorOutside[] = {0, 0, 0, 0};
+				// colorBackground[] = {1, 1, 0.85, 0.2};
+				
+				// colorText[] = {1, 1, 1, 0.85};
+
+				// font = "PuristaMedium";
+				// sizeEx = 0.0270000;
+				// scaleMin = 1e-006;
+				// scaleMax = 1000;
+				// scaleDefault = 0.18;
+			
+
+				// stickX[] = {0.20, {"Gamma", 1.00, 1.50} };
+				// stickY[] = {0.20, {"Gamma", 1.00, 1.50} };
+				// ptsPerSquareSea = 6;
+				// ptsPerSquareTxt = 8;
+				// ptsPerSquareCLn = 8;
+				// ptsPerSquareExp = 8;
+				// ptsPerSquareCost = 8;
+				// ptsPerSquareFor = "4.0f";
+				// ptsPerSquareForEdge = "10.0f";
+				// ptsPerSquareRoad = 2;
+				// ptsPerSquareObj = 10;
+
+				// fontLabel = "PuristaMedium";
+				// sizeExLabel = 0.027000;
+				// fontGrid = "PuristaMedium";
+				// sizeExGrid = 0.023000;
+				// fontUnits = "PuristaMedium";
+				// sizeExUnits = 0.031000;
+				// fontNames = "PuristaMedium";
+				// sizeExNames = 0.056000;
+				// fontInfo = "PuristaMedium";
+				// sizeExInfo = 0.031000;
+				// fontLevel = "PuristaMedium";
+				// sizeExLevel = 0.021000;
+				
+				// maxSatelliteAlpha = 0;     // Alpha to 0 by default
+				// alphaFadeStartScale = 0.1; 
+				// alphaFadeEndScale = 3;   // Prevent div/0
+
+				// showCountourInterval=0;
+				// onMouseButtonClick = "";
+				// onMouseButtonDblClick = "";
+			
+			
+			// };
+			
+			class Position1 : DYN_RscPositionText
+			{
+				idc = 4060;
+				y = 0;
+			};
+			class Position2 : DYN_RscPositionText
+			{
+				idc = 4061;
+				y = 0.05;
+			};
+			class Position3 : DYN_RscPositionText
+			{
+				idc = 4062;
+				y = 0.10;
+			};
+			class Position4 : DYN_RscPositionText
+			{
+				idc = 4063;
+				y = 0.15;
+			};
+			class Position5 : DYN_RscPositionText
+			{
+				idc = 4064;
+				y = 0.2;
+			};
+			class Position6 : DYN_RscPositionText
+			{
+				idc = 4065;
+				y = 0.25;
+			};
+			
+			class TextPosition1 : DYN_RscPositionNumberText
+			{
+				idc = 4070;
+				y = 0;
+				text = "1";
+			};
+			class TextPosition2 : DYN_RscPositionNumberText
+			{
+				idc = 4071;
+				y = 0.05;
+				text = "2";
+			};
+			class TextPosition3 : DYN_RscPositionNumberText
+			{
+				idc = 4072;
+				y = 0.1;
+				text = "3";
+			};
+			class TextPosition4 : DYN_RscPositionNumberText
+			{
+				idc = 4073;
+				y = 0.15;
+				text = "4";
+			};
+			class TextPosition5 : DYN_RscPositionNumberText
+			{
+				idc = 4074;
+				y = 0.2;
+				text = "5";
+			};
+			class TextPosition6 : DYN_RscPositionNumberText
+			{
+				idc = 4075;
+				y = 0.25;
+				text = "6";
 			};
 		};
 	};

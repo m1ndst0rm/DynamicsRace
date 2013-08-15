@@ -31,7 +31,17 @@ class CfgSounds
 	};
 };
 
-disabledAI = 1;
+class Params
+{
+	class DYN_ENABLE_AIPARAM
+	{
+		title = "Enable AI (only use for testing)";
+		values[] = {0,1};
+		texts[] = {"Disable","Enable"};
+		default = 0;
+	};
+};
+disabledAI = 0;
 respawn = 3;
 respawnDelay = 0;
 respawnDialog = 0;

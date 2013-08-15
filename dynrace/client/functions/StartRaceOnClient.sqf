@@ -6,8 +6,6 @@ private ["_wait","_mustWait","_text","_i","_vehicle"];
 
 "DYN_fnc_StartRaceOnClient" call BIS_fnc_log;
 
-sleep 15;
-
 [] spawn
 {
 	waitUntil { DYN_RACE_STATE == "ONGOING" };
@@ -16,6 +14,10 @@ sleep 15;
 	if!(player getVariable ["isSpectator",false]) then
 	{
 		[] spawn DYN_fnc_SpawnLocalRaceChecks;
+		if(player getVariable ["isDriver", false]) then
+		{
+			//[] spawn DYN_fnc_TurboSpawnThread;
+		};
 	};
 };
 _wait = 0;
@@ -59,7 +61,6 @@ playSound "BEEP_HIGH";
 //waitUntil {!isNil {DYN_RACE_STARTTIME}};
 //waitUntil {!isNull DYN_RACE_STARTTIME};
 //Enable simultation so no delay
-//(vehicle player) enableSimulation true;
 _text = "<t align='center' valign='middle' size='2.0'>Go!</t>";
 [_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
 

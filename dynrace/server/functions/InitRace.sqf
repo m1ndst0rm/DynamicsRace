@@ -9,16 +9,6 @@ private ["_onlinePlayers","_racers","_player","_assigned","_teamId","_team","_sp
 DYN_RACE_RACERS = []; //[[name,player,vehicle,playerdamage,vehicledamage,canMove]]
 DYN_RACE_DRIVERCOUNT = 0;
 DYN_RACE_ROBBERCOUNT = 0;
-//Start race with all the users which are currently online
-_onlinePlayers = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
-
-_racers = [];
-{
-	if!(_x getVariable["isSpectator", false]) then
-	{
-		_racers set [count _racers, _x];
-	};
-} foreach _onlinePlayers;
 
 //Randomize player whom have not selected a team  & spot
 {
@@ -47,7 +37,6 @@ _racers = [];
 							_players set [count _players, _player];
 							_teamPlayers set [count _teamPlayers, _player];
 							_player setVariable ["teamNumber", _teamId, true];
-							_global_changed = true;
 							_spot set [2, _players];
 							_assigned = true;
 						};
@@ -63,11 +52,27 @@ _racers = [];
 			} foreach DYN_RACE_TEAMS;
 		};
 	};
-} foreach _racers;
+} foreach DYN_RACE_AVAILABLERACERS;
 
+if(DYN_RACE_TYPE == "SINGLE") then
+{ //Set teamNames to player names.
+	{
+		_x set [0, name ((_x select 2) select 0)];
+	} foreach DYN_RACE_TEAMS;
+};
 
+if(DYN_RACE_TYPE != "SINGLE") then
+{
+	//Publish new teams
+	publicVariable "DYN_RACE_TEAMS";
+	//Remove "join team" button.
+	[[],"DYN_fnc_TeamSelectionDialogRemoveJoinButton", true] call BIS_fnc_MP;
+	if!(isDedicated) then
+	{
+		[] call DYN_fnc_OnTeamsChanged;
+	};
+};
 _teamsCount = count DYN_RACE_TEAMS;
-_startPos = 0;
 
 _drivers = [];
 _gunners = [];
@@ -179,6 +184,14 @@ _first = _drivers + _robbers + _mice;
 DYN_RACE_DRIVERCOUNT = count _first;
 DYN_RACE_ROBBERCOUNT = count _robbers;
 _second = _cats + _cops + _helies;
+
+//Give players some time to watch at the teams.
+if(DYN_RACE_TYPE != "SINGLE") then
+{
+	sleep 5;
+};
+
+_startPos = 0;
 _playerToCreateVehiclesFor = _first + _second;
 {
 	_player = _x;
@@ -196,7 +209,7 @@ _playerToCreateVehiclesFor = _first + _second;
 	};
 	if(_player getVariable ["isMouse", false]) then
 	{
-		_vehicleClass = DYN_RACE_OFFROAD_CLASS;
+		_vehicleClass = DYN_RACE_MOUSE_CLASS;
 	};
 	if(_player getVariable ["isCop", false] || _player getVariable ["isCat", false]) then
 	{
@@ -307,48 +320,53 @@ _playerToCreateVehiclesFor = _first + _second;
 	_startPos = _startPos + 1;
 } forEach _playerToCreateVehiclesFor;
 
-DYN_RACE_STATE = "STARTING";
-
 publicVariable "DYN_RACE_RACERS";
+
 [] call DYN_fnc_OnRacersChanged;
 {
 	_racer = _x;
 	_player = _racer select 1;
 	_vehicle = _racer select 2;
 	_player setVariable ["vehicle", _vehicle, true];
-	_player removeweapon "itemmap";
-	_player addweapon "itemmap";
 } foreach DYN_RACE_RACERS;
-sleep 2;
-publicVariable "DYN_RACE_STATE";
-[] call DYN_fnc_OnRaceStateChanged;
 
 //Add waypoints for AI units. Just for testing purpose
-_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
+if ({ !(isPlayer _x)} count DYN_RACE_AVAILABLERACERS > 0) then
 {
-	_unit = _x;
-	if !(isPlayer _unit) then
 	{
-		_unit allowFleeing 0;
-		
-		_checkPointCout = count DYN_RACE_CHECKPOINTS;
-		_firstWaypointId = 0;
-		if(DYN_RACE_LAPS == 1) then
+		_unit = _x;
+		if !(isPlayer _unit) then
 		{
-			_firstWaypointId = 1;
+			_unit allowFleeing 0;
+			
+			_checkPointCout = count DYN_RACE_CHECKPOINTS;
+			_firstWaypointId = 0;
+			if(DYN_RACE_LAPS == 1) then
+			{
+				_firstWaypointId = 1;
+			};
+			
+			_i = 0; for "_i" from 0 to (_checkPointCout - 1) do
+			{
+				_checkpoint = DYN_RACE_CHECKPOINTS select _i;
+				_wp = (group _unit) addWaypoint [getMarkerPos _checkpoint, 0]; 
+				_wp setWaypointType "MOVE"; 
+				_wp setWaypointSpeed "FULL"; 
+				_wp setWaypointBehaviour "AWARE";
+			};
+			
+			_unit setVariable ["currentWaypointId", _firstWaypointId, true];
+			(group _unit) setCurrentWaypoint [(group _unit), _firstWaypointId + 1]; //First waypoint is 1 instead of 0. seriously bis...
+			_currentWayPointId = (currentWaypoint (group _unit));
 		};
-		
-		_i = 0; for "_i" from 0 to (_checkPointCout - 1) do
-		{
-			_checkpoint = DYN_RACE_CHECKPOINTS select _i;
-			_wp = (group _unit) addWaypoint [getMarkerPos _checkpoint, 0]; 
-			_wp setWaypointType "MOVE"; 
-			_wp setWaypointSpeed "FULL"; 
-			_wp setWaypointBehaviour "AWARE";
-		};
-		
-		_unit setVariable ["currentWaypointId", _firstWaypointId, true];
-		(group _unit) setCurrentWaypoint [(group _unit), _firstWaypointId + 1];
-		_currentWayPointId = (currentWaypoint (group _unit));
-	};
-} foreach _units;
+	} foreach DYN_RACE_AVAILABLERACERS;
+};
+
+DYN_RACE_INITPREPDONE = true;
+publicVariable "DYN_RACE_INITPREPDONE";
+
+//Give clients time to prepare
+sleep 5;
+DYN_RACE_STATE = "STARTING";
+publicVariable "DYN_RACE_STATE";
+[] call DYN_fnc_OnRaceStateChanged;

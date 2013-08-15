@@ -11,7 +11,7 @@ if(DYN_RACE_STATE == "IDLE") then
 	if!(DYN_VOTEDIALOG_OPEN) then
 	{
 		private ["_voteDisplay","_total_racers"];
-		_total_racers = (if (isMultiplayer) then {{!(_x getVariable ["isSpectator", false])} count playableUnits} else {count switchableUnits});
+		_total_racers = count ([] call DYN_fnc_GetAvailableRacers);
 		if(_total_racers > 1) then
 		{
 			disableSerialization;
@@ -22,6 +22,10 @@ if(DYN_RACE_STATE == "IDLE") then
 			waitUntil {(!(isNull (findDisplay 4000)))};
 			_voteDisplay = findDisplay 4000;
 			_voteDisplay displayAddEventHandler ["KeyDown","_this call DYN_fnc_DisableClose;"];
+		}
+		else
+		{
+			hintC "Not enough players online to start a vote.";
 		};
 	};
 };

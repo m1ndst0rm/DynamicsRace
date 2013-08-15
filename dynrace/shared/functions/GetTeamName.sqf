@@ -1,14 +1,16 @@
 /* DYN_fnc_GetTeamName: return team name with format options
-*	Param1: Teamno or team
+*	Param1: Teamno, team or player
 *	Param2 (optional): format option
 *			-0: Team 1: Player1, Player2, ....
-*			-1: Team 1
+*			-1: Team 1 || Playername in racetype SINGLE
 *			-2: T1: Player1, Player2,...
 *			-3: T1
 *
 */
 private ["_p0","_team","_teamNo","_formatOption","_teamName","_playerNames","_players","_playersCount","_i","_player"];
-_p0= _this select 0;
+_p0 = _this select 0;
+_formatOption = [_this, 1, 0] call bis_fnc_param;
+
 _team = objNull;
 _teamNo = -1;
 if(typeName _p0 == "ARRAY") then
@@ -18,19 +20,29 @@ if(typeName _p0 == "ARRAY") then
 }
 else
 {
-	_team = DYN_RACE_TEAMS select _p0;
-	_teamNo = _p0;
-};
-_formatOption = 0;
-if(count _this > 1) then
-{
-	_formatOption = _this select 1;
+	if(typeName _p0 == "SCALAR") then
+	{
+		_team = DYN_RACE_TEAMS select _p0;
+		_teamNo = _p0;
+	}
+	else
+	{
+		_teamNo = (_p0 getVariable "teamNumber");
+		_team = DYN_RACE_TEAMS select _teamNo;
+	};
 };
 
 _teamName = "";
 if(_formatOption < 2) then
 {
-	_teamName = format ["Team %1", _teamNo + 1];
+	if(DYN_RACE_TYPE == "CAT&MOUSE" || DYN_RACE_TYPE == "SINGLE") then
+	{
+		_teamName = _team select 0;
+	}
+	else
+	{
+		_teamName = format ["Team %1", _teamNo + 1];
+	};
 }
 else
 {

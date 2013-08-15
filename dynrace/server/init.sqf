@@ -9,13 +9,9 @@ publicVariable "DYN_RACE_STATE";
 publicVariable "DYN_RACE_RACERS";
 [] call DYN_fnc_OnRacersChanged;
 
-//AI / testing
-_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
+_units = switchableUnits + playableUnits;
 {
-	if!(isPlayer _x) then
-	{
-		_x allowDamage false;
-		_grp = createGroup west;
-		[_x] joinSilent _grp;
-	};
+	_x allowDamage false;
+	_grp = createGroup west;
+	[_x] joinSilent _grp;
 } forEach _units;

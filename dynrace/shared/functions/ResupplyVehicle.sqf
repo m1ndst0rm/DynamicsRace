@@ -1,6 +1,6 @@
 private ["_magNames","_vehicle","_magNamesCount","_i"];
 _vehicle = vehicle player;
-_magazineInfo = _vehicle getVariable "defaultMagazineInfo";
+_magazineInfo = _vehicle getVariable ["defaultMagazineInfo",[]];
 {	
 	_magazine = _x;
 	

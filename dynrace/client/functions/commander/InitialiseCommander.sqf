@@ -2,6 +2,8 @@
 private ["_comActionsCount","_i","_action","_enableForRaceTypes","_enableForDamageTypes","_enabled"];
 player allowDamage false;
 DYN_RACE_COMDIALOG_OPEN = false;
+
+//Wait for racers to be fully initialized. Gives some time to watch the teams.
 closeDialog 4000;
 closeDialog 4010;
 closeDialog 4020;
@@ -35,32 +37,9 @@ _i= 0; for "_i" from 0 to (_comActionsCount - 1) do
 	{
 		if(_enableForDamageTypes == "BOTH" || (_enableForDamageTypes == "ENABLED" && DYN_RACE_DAMAGE_ENABLED) || (_enableForDamageTypes == "DISABLED" && !DYN_RACE_DAMAGE_ENABLED)) then
 		{
-			//Create buttons plx
-			//IDD_MAIN_MAP == 12
-			//IDC_MAP = 51
-			//(findDisplay IDD_MAIN_MAP) createDisplay 
 			DYN_RACE_COMMANDER_ENABLED_ACTIONS set [count DYN_RACE_COMMANDER_ENABLED_ACTIONS, _action];
 		};
 	};
 };
 
-_myTeamNumber = player getVariable "teamNumber";
-{
-	_racer = _x;
-	_player = _x select 1;
-	_vehicle = _x select 2;
-	if(_player != player && _player getVariable ["isDriver", false]) then
-	{
-		_arrowClass = if(_player getVariable "teamNumber" == _myTeamNumber) then {"Sign_Arrow_Large_Green_F"} else {"Sign_Arrow_Large_F"};
-		_indicator = _arrowClass createVehicleLocal [0,0,0];
-		
-		_BBR = boundingBoxReal _vehicle;
-		_Dim1 = _BBR select 0;
-		_Dim2 = _BBR select 1;
-		_maxWidth = abs ((_Dim2 select 0) - (_Dim1 select 0));
-		_maxLength = abs ((_Dim2 select 1) - (_Dim1 select 1));
-		_maxHeight = abs ((_Dim2 select 2) - (_Dim1 select 2));
-		
-		_indicator attachTo [_vehicle,[0,0,(_maxHeight / 2)]];
-	};
-} foreach DYN_RACE_RACERS;
+[] call DYN_fnc_AddTeamMarkers;

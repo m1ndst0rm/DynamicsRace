@@ -20,6 +20,8 @@ _firstWaypoint = (simpleTasks player) select _firstWaypointId;
 player setCurrentTask _firstWaypoint;
 player setVariable ["currentWaypointId", _firstWaypointId, true];
 
+waitUntil { (!isNull(player getVariable ["vehicle", objNull])) || player getVariable ["isSpectator",false]};
+
 closeDialog 4000;
 closeDialog 4010;
 closeDialog 4020;
@@ -27,8 +29,6 @@ DYN_VOTEDIALOG_OPEN = false;
 
 cutText  ["", "BLACK OUT", 1];
 sleep 1;
-
-waitUntil { (!isNull(player getVariable ["vehicle", objNull])) || player getVariable ["isSpectator",false]};
 
 if(player getVariable ["isSpectator",false]) then
 {
@@ -41,8 +41,8 @@ else
 	{
 		player moveInDriver _vehicle;
 		DYN_RACE_HANLDER_RESET = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 19) then {[] call DYN_fnc_ResetVehicle;};"];
-		//DYN_RACE_HANLDER_TURBOSTART = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 17 || (_this select 1 == 200)) then { [] call DYN_fnc_TurboStart; };"];
-		//DYN_RACE_HANLDER_TURBOSTOP = (finddisplay 46) displayAddEventHandler ["keyup", "if ((_this select 1) == 17 || (_this select 1 == 200)) then { [] call DYN_fnc_TurboStop; }; "];
+		//DYN_RACE_HANLDER_TURBOKEYPRESS = (finddisplay 46) displayAddEventHandler ["keydown", "_this call DYN_fnc_TurboKeyPress;"];
+		//DYN_RACE_HANLDER_TURBOKEYRELEASE = (finddisplay 46) displayAddEventHandler ["keyup", "_this call DYN_fnc_TurboKeyRelease;"];
 	};
 	if(player getVariable ["isGunner", false]) then
 	{
@@ -61,6 +61,11 @@ else
 	if(_vehicle getVariable ["isCop", false]) then
 	{
 		//_vehicle call DYN_fnc_SetAsCopVehicle;
+	};
+	
+	if(DYN_RACE_TYPE == "CAT&MOUSE") then
+	{
+		[] call DYN_fnc_AddTeamMarkers;
 	};
 };
 cutText  ["", "BLACK IN", 1];

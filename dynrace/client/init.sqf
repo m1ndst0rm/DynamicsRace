@@ -1,11 +1,4 @@
-if (isNil {player} || isNull player) then
-{
-	DYN_RACE_JIPPLAYER = true;
-}
-else
-{
-	DYN_RACE_JIPPLAYER = false;
-};
+DYN_RACE_JIPPLAYER = (DYN_RACE_STATE != "IDLE");
 
 [] execVM "dynrace\client\ui\onEachFrame.sqf";
 
@@ -16,9 +9,6 @@ else
 	waitUntil {!isNull player};
 	
 	//Move to unique group so player has own waypoint
-	_grp = createGroup west;
-	[player] joinSilent _grp;
-	player allowDamage false;
 	player setVariable ["JIPPLAYER", DYN_RACE_JIPPLAYER, true];
 
 	DYN_RACE_MUST_STAY_ON_ROAD_LOCAL = DYN_RACE_MUST_STAY_ON_ROAD;
@@ -31,7 +21,6 @@ else
 	DYN_RACE_SPEC_ENABLED = false;
 	DYN_VOTEDIALOG_OPEN = false;
 	DYN_RACE_ELAPSED_TIME = 0;
-	//enableRadio false;
 
 	"DYN_RACE_TEAMS" addPublicVariableEventHandler { [] spawn DYN_fnc_OnTeamsChanged;};
 	"DYN_RACE_DISPLAYMESSAGE" addPublicVariableEventHandler { [] spawn DYN_fnc_OnDisplayMessageChanged;};
@@ -39,13 +28,14 @@ else
 	player allowDamage false;
 	removeAllItems player;
 	removeAllWeapons player;
+	removeAllContainers player;
+	//removeAllAssignedItems player;
 	
 	waitUntil {!(isNull (findDisplay 46))};
 	
 	(finddisplay 46) displayRemoveAllEventHandlers "keydown";
 	(finddisplay 46) displayRemoveAllEventHandlers "keyup";
 	(finddisplay 46) displayRemoveAllEventHandlers "MouseButtonDown";
-
 	
 	DYN_RACE_HANLDER_VOTE = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 47) then {[] call DYN_fnc_VoteDialog;};"];
 	DYN_RACE_HANDLER_HELP = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 35) then { [] call DYN_fnc_DisplayHelp; };"];

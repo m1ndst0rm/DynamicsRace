@@ -14,7 +14,7 @@ switch (DYN_RACE_VOTE_TYPE_CLIENT) do
 {
 	case "RACETYPE":
 	{
-		_total_racers = (if (isMultiplayer) then {{!(_x getVariable ["isSpectator", false])} count playableUnits} else {count switchableUnits});
+		_total_racers = count ([] call DYN_fnc_GetAvailableRacers);
 		ctrlSetText [4002, "Vote racetype"];
 		{
 			_raceType = _x select 0;

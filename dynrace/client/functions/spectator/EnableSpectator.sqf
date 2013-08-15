@@ -25,7 +25,7 @@ if(count DYN_RACE_RACERS > 0) then
 };
 
 DYN_RACE_SPECTATOR_CAM = "camconstruct" camCreate ((vehicle player) modelToWorld [0, 0, 1.75]);
-DYN_RACE_SPECTATOR_CAM camConstuctionSetParams [(getPosATL (vehicle player)), 20000, 2000];
+DYN_RACE_SPECTATOR_CAM camConstuctionSetParams [(getPosATL (vehicle player)), 10000, 10000];
 DYN_RACE_SPECTATOR_CAM cameraEffect ["internal", "back"];
 DYN_RACE_SPECTATOR_CAM camPrepareTarget DYN_RACE_SPECTATOR_TARGET;
 DYN_RACE_SPECTATOR_CAM camCommit 0;

@@ -5,15 +5,14 @@
 if (!isServer) exitWith {};
 private ["_racer_count","_i","_racer","_player","_mustWait","_sleep"];
 "DYN_fnc_StartRaceOnServer" call BIS_fnc_log;
-sleep 25;
+//10 second countdown
+sleep 10;
 
 DYN_RACE_STARTTIME = diag_tickTime;
 publicVariable "DYN_RACE_STARTTIME";
 
 //TODO: FIX server side vehicle enabling?
 _racer_count = count DYN_RACE_RACERS;
-
-
 
 for [ {_i = 0}, {_i < _racer_count}, {_i = _i + 1}] do
 {

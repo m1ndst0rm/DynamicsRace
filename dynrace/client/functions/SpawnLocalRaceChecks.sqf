@@ -33,7 +33,7 @@ if(player getVariable ["isCommander", false]) then
 			if(_timeLeft >= 0) then
 			{
 				_text = format["<t align='center' size='1.8'>%1</t>", _timeLeft];
-				[_text, -1, 0.05, 0.9, 0, 0, 11111] spawn BIS_fnc_dynamicText;
+				[_text, -1, 0.05, 1.2, 0, 0, 11111] spawn BIS_fnc_dynamicText;
 			};
 		};
 		sleep DYN_RACE_FINISH_CHECK;
@@ -102,7 +102,7 @@ if(player getVariable "isDriver") then
 							//(_time - DYN_RACE_LAST_WARNING > 1) then
 							//{
 							//	DYN_RACE_LAST_WARNING = _time;
-						   [_text, -1, 0.05, 0.9, 0, 0, 11113] spawn BIS_fnc_dynamicText;
+						   [_text, -1, 0.05, 1.2, 0, 0, 11113] spawn BIS_fnc_dynamicText;
 							//};
 						};
 					};
@@ -172,7 +172,7 @@ if(player getVariable "isDriver") then
 			{
 				player setCurrentTask _nextWaypoint;
 				_currentCheckpointId = _nextWaypointId;
-				player setVariable ["currentWaypointId", _nextWaypointId, true];
+				player setVariable ["currentWaypointId", _currentCheckpointId, true];
 				_text = "<t align='center' size='1.8'>Checkpoint!</t>";
 				[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
 			};
@@ -196,9 +196,9 @@ if(player getVariable "isDriver") then
 				if(_lapsDriven == DYN_RACE_LAPS) then
 				{
 					player setCurrentTask taskNull;
-					player setVariable ["currentWaypointId", -1, true];
+					player setVariable ["currentWaypointId", 0, true];
 					_text = "<t align='center' size='1.8'>Finished!!!</t>";
-					[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
+					[_text, -1, -1, 2, 0.2] spawn BIS_fnc_dynamicText;
 				}
 				else
 				{
@@ -209,7 +209,7 @@ if(player getVariable "isDriver") then
 					player setVariable ["currentWaypointId", 0, true];
 					_currentCheckpointId = (simpleTasks player) find _nextWaypoint;
 					_text = format["<t align='center' size='1.8'>%1 laps left!</t>", _lapsleft];
-					[_text, -1, -1, 1, 0.2] spawn BIS_fnc_dynamicText;
+					[_text, -1, -1, 2, 0.2] spawn BIS_fnc_dynamicText;
 				};
 				_currentCheckpoint = (currentTask player);
 				_currentCheckpointDestination = taskDestination _currentCheckpoint;

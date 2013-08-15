@@ -46,24 +46,28 @@ sleep 15;
 
 [] call DYN_fnc_PrepareRace;
 
-_units = (if (isMultiplayer) then {playableUnits} else {switchableUnits});
+if ({ !(isPlayer _x)} count DYN_RACE_AVAILABLERACERS > 0) then
 {
-	if!(isPlayer _x) then
 	{
-		_group = group _x;
-		while {(count (waypoints _group)) > 0} do
+		if!(isPlayer _x) then
 		{
-			deleteWaypoint [_group, 0];
+			_group = group _x;
+			while {(count (waypoints _group)) > 0} do
+			{
+				deleteWaypoint [_group, 0];
+			};
 		};
-	};
-} forEach _units;
-
+	} forEach DYN_RACE_AVAILABLERACERS;
+};
 
 DYN_RACE_TYPE = "";
 publicVariable "DYN_RACE_TYPE";
 
 DYN_RACE_STATE = "IDLE";
 publicVariable "DYN_RACE_STATE";
+
+DYN_RACE_INITPREPDONE = false;
+publicVariable "DYN_RACE_INITPREPDONE";
 
 DYN_RACE_TEAMS = [];
 publicVariable "DYN_RACE_TEAMS";
