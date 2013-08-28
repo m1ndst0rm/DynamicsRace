@@ -24,28 +24,39 @@ OffRoadTextures = ["\A3\soft_F\Offroad_01\Data\Offroad_01_ext_co.paa",  //red
 	_vehicleAllowDamage = _racer select 4;
 	_vehicleEnableSimulation = _racer select 5;
 	
-	if(typeOf _vehicle == DYN_RACE_OFFROAD_CLASS) then
+	if(DYN_RACE_TYPE == "CAT&MOUSE") then
 	{
-		//format ["Setting anim of vehicle: %1. ", _vehicle_netId] call BIS_fnc_log;
-		_vehicle animate ["HidePolice", _vehicle getVariable ["HidePolice", 1]];  
-		_vehicle animate ["HideServices", _vehicle getVariable ["HideServices", 1]];  
-		_vehicle animate ["HideBackpacks", _vehicle getVariable ["HideBackpacks", 1]];  
-		_vehicle animate ["HideBumper1", _vehicle getVariable ["HideBumper1", 0]];  
-		_vehicle animate ["HideBumper2", _vehicle getVariable ["HideBumper2", 0]];  
-		_vehicle animate ["HideConstruction", _vehicle getVariable ["HideConstruction", 0]];  
-		_vehicle animate ["HideDoor1", _vehicle getVariable ["HideDoor1", 0]];   
-		_vehicle animate ["HideDoor2", _vehicle getVariable ["HideDoor2", 0]];  
-		_vehicle animate ["HideDoor3", _vehicle getVariable ["HideDoor3", 0]];  
-		_vehicle animate ["HideGlass2", _vehicle getVariable ["HideGlass2", 0]];  
-		
-		_texture1 = _vehicle getVariable ["Texture1", floor(random 6)];
-		_texture2 = _vehicle getVariable ["Texture2", floor(random 6)];
-		_vehicle setVariable ["Texture1",_texture1]; 
-		_vehicle setVariable ["Texture2",_texture2];
-		
-		_vehicle setObjectTexture [0, OffRoadTextures select (_texture1)];
-		_vehicle setObjectTexture [1, OffRoadTextures select (_texture2)];
-	};		
+		_teamNo = _player getVariable "teamNumber";
+		_color = DYN_RACE_CATROBBERSCOLORCODES select _teamNo;
+		_texture = format ["#(argb,8,8,3)color(%1,%2,%3,%4,CA)", _color select 0, _color select 1, _color select 2, _color select 3];
+		diag_log _texture;
+		_vehicle setObjectTexture [0, _texture];
+	}
+	else
+	{
+		if(typeOf _vehicle == DYN_RACE_OFFROAD_CLASS) then
+		{
+			//format ["Setting anim of vehicle: %1. ", _vehicle_netId] call BIS_fnc_log;
+			_vehicle animate ["HidePolice", _vehicle getVariable ["HidePolice", 1]];  
+			_vehicle animate ["HideServices", _vehicle getVariable ["HideServices", 1]];  
+			_vehicle animate ["HideBackpacks", _vehicle getVariable ["HideBackpacks", 1]];  
+			_vehicle animate ["HideBumper1", _vehicle getVariable ["HideBumper1", 0]];  
+			_vehicle animate ["HideBumper2", _vehicle getVariable ["HideBumper2", 0]];  
+			_vehicle animate ["HideConstruction", _vehicle getVariable ["HideConstruction", 0]];  
+			_vehicle animate ["HideDoor1", _vehicle getVariable ["HideDoor1", 0]];   
+			_vehicle animate ["HideDoor2", _vehicle getVariable ["HideDoor2", 0]];  
+			_vehicle animate ["HideDoor3", _vehicle getVariable ["HideDoor3", 0]];  
+			_vehicle animate ["HideGlass2", _vehicle getVariable ["HideGlass2", 0]];  
+			
+			_texture1 = _vehicle getVariable ["Texture1", floor(random 6)];
+			_texture2 = _vehicle getVariable ["Texture2", floor(random 6)];
+			_vehicle setVariable ["Texture1",_texture1]; 
+			_vehicle setVariable ["Texture2",_texture2];
+			
+			_vehicle setObjectTexture [0, OffRoadTextures select (_texture1)];
+			_vehicle setObjectTexture [1, OffRoadTextures select (_texture2)];
+		}
+	};
 
 	//_vehicle allowDamage _vehicleAllowDamage;
 

@@ -4,6 +4,7 @@ Updates:
 	- overview of team before race start
 	- cat & mouse teams based on colors
 	- gui updates on position and time
+	- added mission parameter to enable AI (for testing).
 
 Bugfixes: 
 	- not being able to start a race due to false online racer count

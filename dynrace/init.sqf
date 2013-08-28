@@ -88,7 +88,23 @@ if !(isDedicated) then
 	DYN_fnc_TurboKeyRelease = compileFinal preprocessFileLineNumbers "dynrace\client\functions\TurboKeyRelease.sqf";
 	DYN_fnc_TurboSpawnThread = compileFinal preprocessFileLineNumbers "dynrace\client\functions\TurboSpawnThread.sqf";
 	
+	DYN_fnc_GetAvailableVehiclesFromConfig = compileFinal preprocessFileLineNumbers "dynrace\client\functions\ui\GetAvailableVehiclesFromConfig.sqf";
+	DYN_fnc_DisableClose = compileFinal preprocessFileLineNumbers "dynrace\client\functions\ui\DisableClose.sqf";
 	
+	//Car designer
+	DYN_fnc_CarDesignFocusOnSelectedPart = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignFocusOnSelectedPart.sqf";
+	DYN_fnc_CarDesignInit = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignInit.sqf";
+	DYN_fnc_CarDesignKeyDown = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignKeyDown.sqf";
+	DYN_fnc_CarDesignLoadCar = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignLoadCar.sqf";
+	DYN_fnc_CarDesignNewPart = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignNewPart.sqf";
+	DYN_fnc_CarDesignPartMove = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignPartMove.sqf";
+	DYN_fnc_CarDesignPartSwitch = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignPartSwitch.sqf";
+	DYN_fnc_CarDesignPick = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignPick.sqf";
+	DYN_fnc_CarDesignSaveCar = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignSaveCar.sqf";
+	DYN_fnc_CarDesignSwitchCar = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignSwitchCar.sqf";
+	DYN_fnc_CarDesignSwitchSelectedPart = compileFinal preprocessFileLineNumbers "dynrace\client\functions\cardesigner\CarDesignSwitchSelectedPart.sqf";
+	
+	//Com actions
 	DYN_fnc_ComActionDialogInit = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\ActionDialogInit.sqf";
 	DYN_fnc_ComBoostAlly = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\BoostAlly.sqf";
 	DYN_fnc_ComBtnAction = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\BtnAction.sqf";
@@ -111,9 +127,6 @@ if !(isDedicated) then
 	DYN_fnc_DisableSpectator = compileFinal preprocessFileLineNumbers "dynrace\client\functions\spectator\DisableSpectator.sqf";
 	DYN_fnc_SwitchFreeLook = compileFinal preprocessFileLineNumbers "dynrace\client\functions\spectator\SwitchFreeLook.sqf";
 	DYN_fnc_SwitchPlayer = compileFinal preprocessFileLineNumbers "dynrace\client\functions\spectator\SwitchPlayer.sqf";
-	
-	DYN_fnc_GetAvailableVehiclesFromConfig = compileFinal preprocessFileLineNumbers "dynrace\client\functions\ui\GetAvailableVehiclesFromConfig.sqf";
-	DYN_fnc_DisableClose = compileFinal preprocessFileLineNumbers "dynrace\client\functions\ui\DisableClose.sqf";
 	
 	DYN_fnc_TeamSelectionDialog = compileFinal preprocessFileLineNumbers "dynrace\client\functions\ui\TeamSelectionDialog.sqf"; 
 	DYN_fnc_TeamSelectionDialogInit = compileFinal preprocessFileLineNumbers "dynrace\client\functions\ui\TeamSelectionDialogInit.sqf"; 

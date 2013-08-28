@@ -98,7 +98,7 @@ if(player getVariable "isDriver") then
 						_reset = 20 - (_time - DYN_PLAYER_LAST_ON_ROAD_TIME);
 						if(_reset > 0) then
 						{
-							_text = format["<t align='center' valign='middle' size='1.8'>Warning leaving road.<br/>Reset in  %1</t>", floor _reset];
+							_text = format["<t align='center' valign='middle' size='1'>Warning leaving road.<br/>Reset in  %1</t>", floor _reset];
 							//(_time - DYN_RACE_LAST_WARNING > 1) then
 							//{
 							//	DYN_RACE_LAST_WARNING = _time;

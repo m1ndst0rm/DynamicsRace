@@ -6,9 +6,15 @@ _displayHelp = [_this, 0, true] call bis_fnc_param;
 
 DYN_RACE_HANDLER_SPECTATOR_SWITCH = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 47	) then {_this call DYN_fnc_SwitchFreeLook;};"];
 DYN_RACE_HANDLER_SPECTATOR_SCROLL = (findDisplay 46) displayAddEventHandler ["mousezchanged", "_this call DYN_fnc_SwitchPlayer;"];
-
+	
 DYN_RACE_SPECTATOR_CAM_FREELOOK = true;
 DYN_RACE_SWITCHINGPLAYER = false;
+
+
+DYN_RACE_SPECTATOR_CAM = "camconstruct" camCreate ((vehicle player) modelToWorld [0, 0, 1.75]);
+DYN_RACE_SPECTATOR_CAM camConstuctionSetParams [(getPosATL (vehicle player)), 10000, 10000];
+DYN_RACE_SPECTATOR_CAM cameraEffect ["internal", "back"];
+
 _possibleSpecs = [];
 if(count DYN_RACE_RACERS > 0) then
 {
@@ -23,11 +29,8 @@ if(count DYN_RACE_RACERS > 0) then
 	
 	DYN_RACE_SPECTATOR_TARGET = _possibleSpecs select floor(random count _possibleSpecs);
 };
-
-DYN_RACE_SPECTATOR_CAM = "camconstruct" camCreate ((vehicle player) modelToWorld [0, 0, 1.75]);
-DYN_RACE_SPECTATOR_CAM camConstuctionSetParams [(getPosATL (vehicle player)), 10000, 10000];
-DYN_RACE_SPECTATOR_CAM cameraEffect ["internal", "back"];
 DYN_RACE_SPECTATOR_CAM camPrepareTarget DYN_RACE_SPECTATOR_TARGET;
+
 DYN_RACE_SPECTATOR_CAM camCommit 0;
 titleCut ["", "BLACK IN", 1];
 DYN_RACE_SPEC_ENABLED = true;

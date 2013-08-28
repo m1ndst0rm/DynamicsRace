@@ -1,6 +1,5 @@
 //Init player as commander
 private ["_comActionsCount","_i","_action","_enableForRaceTypes","_enableForDamageTypes","_enabled"];
-player allowDamage false;
 DYN_RACE_COMDIALOG_OPEN = false;
 
 //Wait for racers to be fully initialized. Gives some time to watch the teams.
