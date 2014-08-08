@@ -17,14 +17,14 @@ _text = "<t align='center' valign='middle' size='2.0'>Go!</t>";
 waitUntil { DYN_RACE_STATE == "ONGOING" };
 [] spawn DYN_fnc_SpawnLocalTimer;
 
-//DYN_RACE_HANLDER_MAP = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 50) then {[] call DYN_fnc_ComBtnMap;};"];
+//DYN_RACE_HANDLER_MAP = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 50) then {[] call DYN_fnc_ComBtnMap;};"];
 //onMapSingleClick "[_pos, _units, _shift, _alt] call DYN_fnc_ComMapClick;false;";
 DYN_RACE_HANLDER_COMACTIONS = (finddisplay 46) displayAddEventHandler ["keydown", "if ((_this select 1) == 57) then {[] call DYN_fnc_ComDisplayActions;};"];
 DYN_RACE_HANDLER_COMACTIVEACTION = (finddisplay 46) displayAddEventHandler ["MouseButtonDown", "_this call DYN_fnc_ComDeployAction;"];
 //(finddisplay 46) createDisplay "DYN_COMTARGETDiag";
 4040 cutRsc ["DYN_COMTARGETDiag","PLAIN"]; 
 
-DYN_RACE_COMMANDER_RESOURCEPOINTS = 0;
+DYN_RACE_COMMANDER_RESOURCEPOINTS = 20;
 disableSerialization;
 while{ (DYN_RACE_STATE == "ONGOING") } do 
 {
@@ -49,7 +49,7 @@ while{ (DYN_RACE_STATE == "ONGOING") } do
 
 //Race is over. Remove the handlers etc
 onMapSingleClick "";
-(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_MAP];
+//(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANDLER_MAP];
 (finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_COMACTIONS];
 (finddisplay 46) displayRemoveEventHandler ["MouseButtonDown", DYN_RACE_HANDLER_COMACTIVEACTION];
 openMap false;

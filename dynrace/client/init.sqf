@@ -8,7 +8,6 @@ DYN_RACE_JIPPLAYER = (DYN_RACE_STATE != "IDLE");
 	waitUntil {!isNil {player}};
 	waitUntil {!isNull player};
 	
-	//Move to unique group so player has own waypoint
 	player setVariable ["JIPPLAYER", DYN_RACE_JIPPLAYER, true];
 
 	DYN_RACE_MUST_STAY_ON_ROAD_LOCAL = DYN_RACE_MUST_STAY_ON_ROAD;

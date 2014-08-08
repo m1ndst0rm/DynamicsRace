@@ -12,6 +12,14 @@ switch (DYN_RACE_STATE) do
 	{
 		if(isServer) then
 		{
+			if(isNil "DYN_RACE_VEHICLE") then
+			{
+				[] call DYN_fnc_LoadStartPositions;
+			}
+			else
+			{
+				[DYN_RACE_VEHICLE] call DYN_fnc_LoadStartPositions;
+			};
 			[] spawn DYN_fnc_InitRace;
 		};
 		if!(isDedicated) then

@@ -89,6 +89,18 @@ if(DYN_RACE_TYPE == "COPS&ROBBERS") then
 
 						if(_cop distance _robber < _distanceLimit) then
 						{
+							if(isMultiplayer || {(player == _robber)}) then
+							{
+								_players = [_robber];
+								_teamNumber = _robber getVariable ["teamNumber", -1];
+								if(_teamNumber != -1) then
+								{
+									_team = DYN_RACE_TEAMS select _teamNumber;
+									_players = _team select 2;
+								};
+								[[_players,_robberPoliceNearTime],"DYN_fnc_CamShake",_players] call BIS_fnc_MP;
+							};
+							
 							_robberPoliceNearTime = _robberPoliceNearTime + DYN_RACE_SLEEP_COPCHECK;
 							_copNear = true;
 						};

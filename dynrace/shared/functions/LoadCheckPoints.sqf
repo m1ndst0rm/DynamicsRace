@@ -9,7 +9,16 @@ while { !(_allMarkersFound) } do
 	
 	if((_pos select 0 != 0) && (_pos select 1 != 0)) then
 	{
-		DYN_RACE_CHECKPOINTS set [count DYN_RACE_CHECKPOINTS, _marker_name];	
+		DYN_RACE_CHECKPOINTS set [count DYN_RACE_CHECKPOINTS, _marker_name];
+		if(isServer) then
+		{
+			if(DYN_RACE_LAPS != 1 || (DYN_RACE_LAPS == 1 && _i > 1)) then
+			{
+				_vehicle = createVehicle ["Sign_Circle_F", _pos, [], 0, "CAN_COLLIDE"]; 
+				_vehicle setPos _pos;
+				_vehicle setDir (markerDir _marker_name);
+			};
+		};
 	}
 	else
 	{
@@ -37,8 +46,8 @@ if!(isDedicated) then
 	} forEach DYN_RACE_CHECKPOINTS;
 };
 _tArea = triggerArea DYN_RACE_FINISHTRIGGER;
-_x = _tArea select 0;
-_y = _tArea select 1;
+_width = _tArea select 0;
+_height = _tArea select 1;
 _angle = _tArea select 2;
 _isRectangle = _tArea select 3;
 
@@ -60,8 +69,16 @@ if(_isRectangle) then
 		_checkpointTask = player createSimpleTask ["Finish"];
 		_checkpointTask setSimpleTaskDestination _tPos;
 	};
+	if(isServer) then
+	{
+		_finishX  = _tPosX +  (_width * sin(_angle - 180));
+		_finishY  = _tPosY + (_width * cos(_angle - 180));
+		_finish = createVehicle ["Land_FinishGate_01_wide_F", [_finishX, _finishY, 0], [], 0, "NO_COLLIDE"]; 
+		_finish setPos [_finishX, _finishY, 0];
+		_finish setDir _angle;
+	};
 }
 else
 {
-	["The finish line trigger must be a rectable."] call BIS_fnc_error;
+	["The finish line trigger must be a retangle."] call BIS_fnc_error;
 };

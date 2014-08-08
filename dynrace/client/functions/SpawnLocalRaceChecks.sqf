@@ -224,7 +224,7 @@ if(player getVariable "isDriver") then
 [] spawn {
 	while{ (DYN_RACE_STATE == "ONGOING") } do 
 	{
-		//TODO: Decide what to do
+		//TODO: Decide what to do with damage
 		_vehicle = vehicle player;
 		if(damage _vehicle == 1 || underwater _vehicle || underwater player) then
 		{

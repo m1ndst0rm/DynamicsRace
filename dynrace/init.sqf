@@ -72,6 +72,7 @@ DYN_fnc_StopRace = compileFinal preprocessFileLineNumbers "dynrace\shared\functi
 if !(isDedicated) then
 {
 	DYN_fnc_AddTeamMarkers = compileFinal preprocessFileLineNumbers "dynrace\client\functions\AddTeamMarkers.sqf";
+	DYN_fnc_CamShake= compileFinal preprocessFileLineNumbers "dynrace\client\functions\CamShake.sqf";
 	DYN_fnc_DisplayHelp = compileFinal preprocessFileLineNumbers "dynrace\client\functions\DisplayHelp.sqf";
 	DYN_fnc_Finished = compileFinal preprocessFileLineNumbers "dynrace\client\functions\Finished.sqf";
 	DYN_fnc_InitRaceOnClient = compileFinal preprocessFileLineNumbers "dynrace\client\functions\InitRaceOnClient.sqf";
@@ -117,6 +118,7 @@ if !(isDedicated) then
 	DYN_fnc_ComResupply = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\Resupply.sqf";
 	DYN_fnc_ComSelectAction = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\SelectAction.sqf";
 	DYN_fnc_ComSelectedActionChanged = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\SelectedActionChanged.sqf";
+	DYN_fnc_ComSpawnExplosiveBarrel= compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\SpawnExplosiveBarrel.sqf";
 	DYN_fnc_ComSpawnSmoke = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\SpawnSmoke.sqf";
 	DYN_fnc_ComSpawnUnit = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\SpawnUnit.sqf";
 	DYN_fnc_ComSpawnVehicle = compileFinal preprocessFileLineNumbers "dynrace\client\functions\commander\SpawnVehicle.sqf";
@@ -156,6 +158,7 @@ DYN_fnc_PrepareRace = compileFinal preprocessFileLineNumbers "dynrace\server\fun
 DYN_fnc_ProcessClientVote = compileFinal preprocessFileLineNumbers "dynrace\server\functions\ProcessClientVote.sqf";
 DYN_fnc_ProcessVotes = compileFinal preprocessFileLineNumbers "dynrace\server\functions\ProcessVotes.sqf";
 DYN_fnc_ProcessTeamSpotChoose = compileFinal preprocessFileLineNumbers "dynrace\server\functions\ProcessTeamSpotChoose.sqf";
+DYN_fnc_SpawnExplosiveBarrelServer= compileFinal preprocessFileLineNumbers "dynrace\server\functions\SpawnExplosiveBarrelServer.sqf";
 DYN_fnc_SpawnServerRaceChecks = compileFinal preprocessFileLineNumbers "dynrace\server\functions\SpawnServerRaceChecks.sqf";
 DYN_fnc_SpawnVehicleMove = compileFinal preprocessFileLineNumbers "dynrace\server\functions\SpawnVehicleMove.sqf";
 DYN_fnc_StartRaceOnServer = compileFinal preprocessFileLineNumbers "dynrace\server\functions\StartRaceOnServer.sqf";
@@ -164,7 +167,8 @@ DYN_fnc_StopRaceOnServer = compileFinal preprocessFileLineNumbers "dynrace\serve
 //#ENDREGION Server Functions
 
 [] call DYN_fnc_LoadCheckPoints;
-[] call DYN_fnc_LoadStartPositions;
+
+DYN_RACE_START_POSITIONS = [];
 
 if(isNil {DYN_RACE_LAPS}) then
 {
@@ -181,12 +185,12 @@ if(DYN_DEBUG_ENABLED) then
 };
 DYN_RACE_INITPREPDONE = false;
 DYN_RACE_TYPES = [["SINGLE","Normal race","Normal race where every player is on their own.", 2],
-["DUAL","Driver & Gunner race","This race consist of teams of 2 players, a driver and a gunner. The gunner can shoot only shoot in front of the vehicle and will either damage or slow down oponents depening on the damage setting.", 4],
+["DUAL","Driver & Gunner race","This race consist of teams of 2 players, a driver and a gunner. The gunner can shoot only shoot in front of the vehicle and will either damage or slow down opponents depending on the damage setting.", 4],
 ["TEAM","Driver & Commander race","In this race each team consists of a driver and a commander. The driver must race and the commander can help out his racer or obstruct other players with various actions.", 4],
-["TEAM3","Driver, Gunner & Commander race","In this race each team consists of a driver, a gunner and a commander.", 6],
-["COPS&ROBBERS","Cops & Robbers","In this race the robbers are tring to escape with an armed vehicle. Police must force them to stop and arrest the robbers.", 4],
-["COPS&ROBBERS&COMMANDER","Cops & Robbers+","In this race the robbers are tring to escape with an armed vehicle. Police must force them to stop and arrest the robbers. The police are assisted by a commander whom can can help the cops and obstruct the robbers.", 5],
-["CAT&MOUSE","Cat & Mouse","This race consists of teams of 2 players, a slower vehicle and a faster vehicle. The slower vehicle is the mouse and must finish first. Cat's must prevent oponents from finishing.", 4],
+["TEAM3","Driver, Gunner & Commander","In this race each team consists of a driver, a gunner and a commander.", 6],
+["COPS&ROBBERS","Cops & Robbers","In this race the robbers are trying to escape with an armed vehicle. Police must force them to stop in order to arrest the robbers.", 4],
+["COPS&ROBBERS&COMMANDER","Cops & Robbers+","In this race the robbers are trying to escape with an armed vehicle. Police must force them to stop in order to arrest the robbers. The police are assisted by a commander whom can can help the cops and obstruct the robbers.", 5],
+["CAT&MOUSE","Cat & Mouse","This race consists of teams of 2 players, a slower vehicle and a faster vehicle. The slower vehicle is the mouse and must finish first. Cat's must prevent opponents from finishing.", 4],
 ["CAT&MOUSE&COMMANDER","Cat & Mouse+","This race is the same as cat and mouse, with the difference that each team also has a commander.", 6]/*,
 ["HELICHASE","Helicopter chase","In this race 2/3 of the players becomes either a driver or a gunner and they must flee from 1/3 of the players which fly helicopters!", 2]*/];
 
@@ -209,10 +213,12 @@ if(isNil {DYN_RACE_DAMAGE_MULTIPLIER}) then
 
 //array ["name",[racetyp1,racetyp2],damageEnabledthingy,"displayName","hint","cost",{script}, waitForScriptDone]  Important Note: USE calls instead of spawns if waitForScriptDone, else it wont wait because of the spawn
 DYN_RACE_DEFAULT_COMMANDER_ACTIONS = [
-["spawnSmoke",[],"BOTH","Spawn smoke","Spawn smoke which lasts for 15 seconds.",10,{[_this,15] call DYN_fnc_ComSpawnSmoke;}, false],
 ["repairAlly",["TEAM","TEAM3","CAT&MOUSE","COPS&ROBBERS"],"ENABLED","Repair ally","Repairs a friendly vehicle.",20,{[_this, 100] call DYN_fnc_ComRepairAlly;}, false],
 ["boostAlly",["TEAM","TEAM3","CAT&MOUSE","COPS&ROBBERS"],"BOTH","Boost ally","Gives an ally a short speed boost.",20,{[_this, 2/*Duration*/,1/*Intesity*/] call DYN_fnc_ComBoostAlly;}, false],
 ["resupplyAlly",["TEAM","TEAM3","CAT&MOUSE","COPS&ROBBERS"],"ENABLED","Resupply ally","Resupplies an ally vehicle with ammo.",40,{[_this] call DYN_fnc_ComResupply;}, false],
+["spawnSmoke",[],"BOTH","Spawn smoke","Spawn smoke which lasts for 15 seconds.",5,{[_this,15] call DYN_fnc_ComSpawnSmoke;}, false],
+["spawnExplosiveBarrel",[],"BOTH","Spawn explosive barrel","Spawn an explosive barrel. (Activates after 1 second).",15,{[_this,15] call DYN_fnc_ComSpawnExplosiveBarrel;}, false],
+
 ["spawnRifleMan",[],"BOTH","Spawn Rifleman","Spawn (and control) a rifleman for 15 seconds.",20,{[_this,"I_soldier_F",15] call DYN_fnc_ComSpawnUnit;}, true],
 ["spawnATSoldier",[],"BOTH","Spawn AT Soldier","Spawn (and control) a anti-tank soldier for 20 seconds.",30,{[_this,"I_Soldier_AA_F",20,"secundary"] call DYN_fnc_ComSpawnUnit;}, true],
 ["spawnOffRoad",[],"BOTH","Spawn Offroad","Spawn (and control) a offroad vehicle for 20 seconds.",40,{[_this, DYN_RACE_OFFROAD_CLASS,20, "DRIVER"] call DYN_fnc_ComSpawnVehicle;}, true],
@@ -235,11 +241,14 @@ DYN_RACE_ROBBER_CLASS = "B_MRAP_01_hmg_F";
 DYN_RACE_CHOPPER_CLASS = "O_Heli_Attack_02_F";
 if(isNil {DYN_RACE_AVAILABLE_VEHICLES_SINGLE}) then
 {
-	DYN_RACE_AVAILABLE_VEHICLES_SINGLE = ["C_Offroad_01_F","B_Quadbike_01_F","B_MRAP_01_F", "I_MRAP_03_F"]; //["Car", true] call DYN_fnc_GetVehiclesFromconfig; <--disabled for the moment because of to-long-vehicles. They instantly explode upon spawn because of to short distance between startpositions
+	//DYN_RACE_AVAILABLE_VEHICLES_SINGLE = ["C_Offroad_01_F","B_Quadbike_01_F","B_MRAP_01_F", "I_MRAP_03_F"]; 
+	DYN_RACE_AVAILABLE_VEHICLES_SINGLE = ["Car", true] call DYN_fnc_GetVehiclesFromconfig;
 };
 if(isNil {DYN_RACE_AVAILABLE_VEHICLES_DUAL}) then
 {
-	DYN_RACE_AVAILABLE_VEHICLES_DUAL = ["Car", false] call DYN_fnc_GetVehiclesFromconfig;//["B_MRAP_01_hmg_F","B_MRAP_01_gmg_F","O_MRAP_02_hmg_F","O_MRAP_02_gmg_F","I_MRAP_03_hmg_F","I_MRAP_03_gmg_F"];
+	_cars = ["Car", false] call DYN_fnc_GetVehiclesFromconfig;
+	_tanks = ["Tank", false] call DYN_fnc_GetVehiclesFromconfig;
+	DYN_RACE_AVAILABLE_VEHICLES_DUAL = _cars + _tanks;
 };
 
 //Time for other players to finish when 1 player finishes.
@@ -276,7 +285,7 @@ if(isNil {DYN_RACE_ROBBER_DISTANCELIMIT}) then
 //For how low robbers needs to be belowspeed & in vicinity
 if(isNil {DYN_RACE_ROBBER_TIMELIMIT}) then
 {
-	DYN_RACE_ROBBER_TIMELIMIT = 5;
+	DYN_RACE_ROBBER_TIMELIMIT = 6;
 };
 
 "DYN_RACE_RACERS" addPublicVariableEventHandler { [] spawn DYN_fnc_OnRacersChanged;};

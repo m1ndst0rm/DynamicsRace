@@ -29,7 +29,7 @@ if !(isNull _nearest_racer) then
 };
 
 _player = player;
-_pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
+_pos = [(getMarkerPos "DYN_RACE_Respawn"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
 player setPos _pos;
 _unit setVariable ["isCommander", true];
 _unit setVariable ["teamNumber", player getVariable "teamNumber"];
@@ -47,5 +47,5 @@ for [{_i = 5},{_i>0}, {_i=_i-1}] do
 [false] call DYN_fnc_EnableSpectator;
 selectPlayer _player;
 deleteVehicle _unit;
-_pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
+_pos = [(getMarkerPos "DYN_RACE_Respawn"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
 player setPos _pos;

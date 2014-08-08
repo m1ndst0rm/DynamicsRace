@@ -60,12 +60,17 @@ else
 
 	if(_vehicle getVariable ["isCop", false]) then
 	{
-		//_vehicle call DYN_fnc_SetAsCopVehicle;
+		_vehicle addAction ["Sirens On",{(_this select 0) animate ["BeaconsStart",1]},[],50,false,true,"","_target animationPhase 'BeaconsStart' < 0.5 AND Alive(_target) AND driver _target == _this"];
+		_vehicle addAction ["Sirens Off",{(_this select 0) animate ["BeaconsStart",0]},[],51,false,true,"","_target animationPhase 'BeaconsStart' > 0.5 AND Alive(_target) AND driver _target == _this"]; 
 	};
 	
 	if(DYN_RACE_TYPE == "CAT&MOUSE") then
 	{
 		[] call DYN_fnc_AddTeamMarkers;
+	};
+	if(DYN_RACE_TYPE == "CAT&MOUSE" || DYN_RACE_TYPE == "COPS&ROBBERS" || DYN_RACE_TYPE == "CAT&MOUSE&COMMANDER" || DYN_RACE_TYPE == "COPS&ROBBERS&COMMANDER") then
+	{
+		[] call DYN_fnc_DisplayHelp;
 	};
 };
 cutText  ["", "BLACK IN", 1];

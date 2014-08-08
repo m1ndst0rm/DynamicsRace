@@ -5,9 +5,11 @@
 private ["_vehicle","_speed","_diff","_vel","_dir"];
 "DYN_fnc_StopRaceOnClient" call BIS_fnc_log;
 
-(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_RESET];
-(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_TURBOKEYPRESS];
-(finddisplay 46) displayRemoveEventHandler ["keyup", DYN_RACE_HANLDER_TURBOKEYRELEASE];
+if !(isNil "DYN_RACE_HANLDER_RESET") then {
+	(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_RESET];
+};
+//(finddisplay 46) displayRemoveEventHandler ["keydown", DYN_RACE_HANLDER_TURBOKEYPRESS];
+//(finddisplay 46) displayRemoveEventHandler ["keyup", DYN_RACE_HANLDER_TURBOKEYRELEASE];
 
 //Incase player hasn't stopped (didn't finish the race).
 if(player getVariable ["isDriver",false]) then
@@ -41,7 +43,7 @@ if((vehicle player) != player) then
 };
 sleep 0.1;
 
-_pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
+_pos = [(getMarkerPos "DYN_RACE_Respawn"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
 player setPos _pos;
 
 hint "";
@@ -52,6 +54,18 @@ disableSerialization;
 createDialog "DYN_ScoreBoardDiag";
 
 waitUntil {DYN_RACE_STATE == "IDLE"};
-
 DYN_RACE_JIPPLAYER = false;
-player setVariable ["JIPPLAYER", false, true];
+player setVariable ["isDriver", false];
+player setVariable ["isRobber", false];
+player setVariable ["isMouse", false];
+player setVariable ["isCommander", false];
+player setVariable ["isCat", false];
+player setVariable ["isGunner", false];
+player setVariable ["isCop", false];
+player setVariable ["vehicle", nil];
+player setVariable ["driver", nil];
+player setVariable ["hasFinished", false];
+player setVariable ["isCaught", false];
+player setVariable ["isSpectator", false];
+player setVariable ["lapTimes", []];
+player setVariable ["teamNumber", -1];

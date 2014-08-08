@@ -33,7 +33,7 @@ sleep 15;
 	{
 		moveOut _player;
 		sleep 0.1;
-		_pos = [(getMarkerPos "respawn_west"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
+		_pos = [(getMarkerPos "DYN_RACE_Respawn"), 0, 15, 0, 1, 50*(pi/180), 0] call BIS_fnc_findSafePos;
 		_player setPos _pos;
 	};
 	if(_vehicle in vehicles) then
