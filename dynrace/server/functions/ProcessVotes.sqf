@@ -90,6 +90,7 @@ switch (_vote_type) do
 		{
 			_vehicleClassName = DYN_RACE_OFFROAD_CLASS;
 			DYN_RACE_DAMAGE_ENABLED = true;
+			publicVariable "DYN_RACE_DAMAGE_ENABLED";
 			_startTeamVote = true;
 		};
 		
@@ -117,7 +118,7 @@ switch (_vote_type) do
 			DYN_RACE_DAMAGE_ENABLED = false;
 			_message = "Damage is disabled. ";
 		};
-		
+		publicVariable "DYN_RACE_DAMAGE_ENABLED";
 		if(DYN_RACE_TYPE != "CAT&MOUSE") then
 		{
 			_vehicleVote = "VEHICLETYPE" call d_fnc_getVoteWinner;

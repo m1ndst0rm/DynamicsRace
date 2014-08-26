@@ -34,7 +34,7 @@ else
 
 	if(PLAYER getVariable ["isMouse", false]) then
 	{
-		_helpText =  "You are a mouse, try to<br/>the first to get to the finish.<br/>Pres H for this information.";
+		_helpText =  "You are a mouse, try to<br/>the first to get to the finish.<br/>Pres R to reset.<br/>Pres H for this information.";
 	};
 
 	if(PLAYER getVariable ["isRobber", false]) then

@@ -33,6 +33,55 @@ class CfgSounds
 
 class Params
 {
+	class MB_WEATHER_PARAM 
+	{
+          title = "Starting Weather";
+          values[] = {0,1,2,3,4};
+          texts[] = {"Clear","Overcast","Rain","Fog","Random"};
+          default = 4;
+    };
+	class DYN_RACE_DAYTIME
+	{
+		title = "Time Of Day";
+		values[] = {1, -8, -6, 0, 8, 13};
+		texts[] = {"Random", "Early Morning", "Morning", "Noon", "Sundown", "Night"};
+		default = 0;
+	};
+	class DYN_RACE_DEFAULT_SMOKE_SCREEN_AMOUNT
+	{
+		title = "Smoke screens available";
+		values[] = {0,5,10,20,50};
+		texts[] = {"0","5","10","20","50"};
+		default = 10;
+	};
+	class DYN_RACE_TIMETOFINISH
+	{
+		title = "Time to finish (after 1st person finishes)";
+		values[] = {0,30,60,120};
+		texts[] = {"0","30","60","120"};
+		default = 60;
+	};
+	class DYN_RACE_ROBBER_SPEEDLIMIT
+	{
+		title = "Robber speed limit (if lower then this & vehicle near they get caught)";
+		values[] = {5,10,20,30,40};
+		texts[] = {"5","10","20","30","40"};
+		default = 10;
+	};
+	class DYN_RACE_ROBBER_DISTANCELIMIT
+	{
+		title = "Robber distance limit (if distance from cop to robber is lower then this & speed is lower then above)";
+		values[] = {5,10,15,30,40};
+		texts[] = {"5","10","15","30","40"};
+		default = 15;
+	};
+	class DYN_CAN_SHOOT_BACKWARDS
+	{
+		title = "Gunners can only shoot forward";
+		values[] = {0,1};
+		texts[] = {"Only forward","Also backward"};
+		default = 1;
+	};
 	class DYN_ENABLE_AIPARAM
 	{
 		title = "Enable AI (only use for testing)";

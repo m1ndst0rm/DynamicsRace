@@ -1,3 +1,17 @@
+## 0.0.4
+Updates:
+	-Added random start time of day
+	-Added random start weather
+	-Added new mission params for weather, time of day, smoke screen amount, timetofinish, robber speed & distance limit and can shoot backwards
+	-More detailed descriptions of racemodes
+	-Start info for drivers about reset
+	-Start info for gunners about disabled guns
+	
+Bugfixes:
+	-Fixed commander MP param sync causing less commander actions to display for clients
+	-Fixed smokescreen not working
+	-Fixed police siren not working
+	
 ## 0.0.3
 Updates:
 	-Added finish line

@@ -32,11 +32,23 @@ if!(isMultiplayer) then
 };
 
 //#REGION External
+//KRON String functions
 [] execVM "dynrace\addons\KRON_Strings.sqf";
+//Meatball weather script
+[] execVM "dynrace\addons\meatball_weather.sqf";
 DYN_fnc_InTrigger = BIS_fnc_inTrigger;//compileFinal preprocessFileLineNumbers "dynrace\addons\fn_inTrigger.sqf";
 //#ENDREGION
 
-//TODO: Create functions here and compilefinal them
+//Time
+
+if(isServer) then
+{
+	if(DYN_RACE_DAYTIME == 1) then
+	{
+		DYN_RACE_DAYTIME = (-12 + floor(random 24));
+	};
+	skipTime (12 - daytime + DYN_RACE_DAYTIME);
+};
 //#REGION Shared Functions
 
 DYN_fnc_CreateExplosion = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\CreateExplosion.sqf";
@@ -60,7 +72,6 @@ DYN_fnc_OnChatChange = compileFinal preprocessFileLineNumbers "dynrace\shared\fu
 DYN_fnc_OnDisplayMessageChanged = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\OnDisplayMessageChanged.sqf";
 DYN_fnc_OnRacersChanged = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\OnRacersChanged.sqf";
 DYN_fnc_OnRaceStateChanged = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\OnRaceStateChanged.sqf";
-//DYN_fnc_OnVehicleHit = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\OnVehicleHit.sqf";
 DYN_fnc_ResupplyVehicle = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\ResupplyVehicle.sqf";
 DYN_fnc_SetVehicleDamageHandler = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\SetVehicleDamageHandler.sqf";
 DYN_fnc_StartRace = compileFinal preprocessFileLineNumbers "dynrace\shared\functions\StartRace.sqf";
@@ -184,11 +195,11 @@ if(DYN_DEBUG_ENABLED) then
 	//1 call BIS_fnc_recompile;
 };
 DYN_RACE_INITPREPDONE = false;
-DYN_RACE_TYPES = [["SINGLE","Normal race","Normal race where every player is on their own.", 2],
-["DUAL","Driver & Gunner race","This race consist of teams of 2 players, a driver and a gunner. The gunner can shoot only shoot in front of the vehicle and will either damage or slow down opponents depending on the damage setting.", 4],
-["TEAM","Driver & Commander race","In this race each team consists of a driver and a commander. The driver must race and the commander can help out his racer or obstruct other players with various actions.", 4],
-["TEAM3","Driver, Gunner & Commander","In this race each team consists of a driver, a gunner and a commander.", 6],
-["COPS&ROBBERS","Cops & Robbers","In this race the robbers are trying to escape with an armed vehicle. Police must force them to stop in order to arrest the robbers.", 4],
+DYN_RACE_TYPES = [["SINGLE","Normal race","Normal race where every player is on their own. Damage can be enabled or disabled, if set to disabled vehicles will slow down upon taking damage.", 2],
+["DUAL","Driver & Gunner race","This race consist of teams of 2 players, a driver and a gunner. The driver must make sure he finishes while the gunner can shoot at others to slow them down. Normal mission setting disallows shooting backward.", 4],
+["TEAM","Driver & Commander race","In this race each team consists of a driver and a commander. The driver must race and try to become first. The command has a spectator/commander overview. He can spawn actions with action points he gets every second. He can either help his team mate or obstruct other teams.", 4],
+["TEAM3","Driver, Gunner & Commander","In this race each team consists of a driver, a gunner and a commander. The driver and gunner must fight their way to the finish while the commander supports them and tries to obstruct other teams.", 6],
+["COPS&ROBBERS","Cops & Robbers","In this race the robbers are trying to escape with an armed vehicle. Police must force them to stop in order to arrest the robbers. Robbers are caught when the police makes them drive slower then a certain amount for 5 seconds while near them.", 4],
 ["COPS&ROBBERS&COMMANDER","Cops & Robbers+","In this race the robbers are trying to escape with an armed vehicle. Police must force them to stop in order to arrest the robbers. The police are assisted by a commander whom can can help the cops and obstruct the robbers.", 5],
 ["CAT&MOUSE","Cat & Mouse","This race consists of teams of 2 players, a slower vehicle and a faster vehicle. The slower vehicle is the mouse and must finish first. Cat's must prevent opponents from finishing.", 4],
 ["CAT&MOUSE&COMMANDER","Cat & Mouse+","This race is the same as cat and mouse, with the difference that each team also has a commander.", 6]/*,
@@ -252,7 +263,10 @@ if(isNil {DYN_RACE_AVAILABLE_VEHICLES_DUAL}) then
 };
 
 //Time for other players to finish when 1 player finishes.
-DYN_RACE_TIMETOFINISH = 60;
+if(isNil {DYN_RACE_TIMETOFINISH}) then
+{
+	DYN_RACE_TIMETOFINISH = 60;
+};
 enableSaving [false, false];
 
 if(isNil {DYN_RACE_STATE}) then
@@ -287,6 +301,8 @@ if(isNil {DYN_RACE_ROBBER_TIMELIMIT}) then
 {
 	DYN_RACE_ROBBER_TIMELIMIT = 6;
 };
+
+DYN_RACE_DAMAGE_ENABLED = false;
 
 "DYN_RACE_RACERS" addPublicVariableEventHandler { [] spawn DYN_fnc_OnRacersChanged;};
 "DYN_RACE_CHAT" addPublicVariableEventHandler { [] spawn DYN_fnc_OnChatChange;};

@@ -9,6 +9,7 @@
 	Returns:
 */
 private ["_firstWaypoint","_vehicle"];
+"DYN_fnc_InitRaceOnClient" call BIS_fnc_log;
 
 DYN_RACE_PLAYER_FINISHED = false;
 _firstWaypointId = 0;
@@ -49,16 +50,19 @@ else
 		player moveInGunner _vehicle;
 	};
 
-	if(DYN_RACE_TYPE == "SINGLE" || 
-	(DYN_RACE_TYPE == "COPS&ROBBERS" && player getVariable "isDriver" && player getVariable "isRobber") ||
-	(DYN_RACE_TYPE == "CAT&MOUSE" && player getVariable "isMouse")) then
+	_addSmoke = false;
+	if(DYN_RACE_TYPE == "SINGLE") then { _addSmoke = true; };
+	if(DYN_RACE_TYPE == "COPS&ROBBERS" && (player getVariable "isDriver") && (player getVariable "isRobber")) then { _addSmoke = true; }; 
+	if(DYN_RACE_TYPE == "CAT&MOUSE" && (player getVariable "isMouse")) then { _addSmoke = true; };
+	
+	if(_addSmoke) then
 	{
-		DYN_RACE_LOCAL_SMOKE_ACTION = _vehicle addAction [format ["Deploy smokescreen (%1 left)",DYN_RACE_DEFAULT_SMOKE_SCREEN_AMOUNT], "dynrace\client\actions\SmokeScreen.sqf",[], 0, false];
+		DYN_RACE_LOCAL_SMOKE_ACTION = (vehicle player) addAction [format ["Deploy smokescreen (%1 left)",DYN_RACE_DEFAULT_SMOKE_SCREEN_AMOUNT], "dynrace\client\actions\SmokeScreen.sqf",[], 0, false];
 	};
 
 	[_vehicle, DYN_RACE_DAMAGE_MULTIPLIER] call DYN_fnc_SetVehicleDamageHandler;
 
-	if(_vehicle getVariable ["isCop", false]) then
+	if(player getVariable ["isCop", false]) then
 	{
 		_vehicle addAction ["Sirens On",{(_this select 0) animate ["BeaconsStart",1]},[],50,false,true,"","_target animationPhase 'BeaconsStart' < 0.5 AND Alive(_target) AND driver _target == _this"];
 		_vehicle addAction ["Sirens Off",{(_this select 0) animate ["BeaconsStart",0]},[],51,false,true,"","_target animationPhase 'BeaconsStart' > 0.5 AND Alive(_target) AND driver _target == _this"]; 
@@ -74,3 +78,18 @@ else
 	};
 };
 cutText  ["", "BLACK IN", 1];
+
+if(player getVariable ["isDriver", false]) then
+{
+	_text = "<t align='center' valign='middle' size='1.8'>Damage is disabled, press R to reset!</t>";
+	if(DYN_RACE_DAMAGE_ENABLED) then
+	{
+		_text = "<t align='center' valign='middle' size='1.8'>Damage is enabled, press R to reset!</t>";
+	};
+	[_text, -1, -1, 4, 0.2] spawn BIS_fnc_dynamicText;
+};
+if(player getVariable ["isGunner", false]) then
+{
+	_text = "<t align='center' valign='middle' size='1.8'>Weapons disabled for the first 20 seconds!</t>";
+	[_text, -1, -1, 4, 0.2] spawn BIS_fnc_dynamicText;
+};

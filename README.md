@@ -46,7 +46,6 @@ And more.
 
 TODO / WIP:
 - Single & Dual race: damage balance
-- Cops & Robbers: Robbers screen fuzz if almost arrest?
 - Heli chase: Everything
 - Figure out what to do with vehicle destruction
 - Fix a decent vehicle reset position based. (Now if muststayonraod lastroadpos, but if not muststayonroad how to reset when we have no clue about track.
@@ -103,7 +102,7 @@ Map markers which must be placed inside your mission:
 
 Map triggers which must be placed inside your mission: (see function documentation for advanced usage):
 
-* Create 1 trigger which acts as the finish line named: DYN_RACE_FINISHTRIGGER. No onActs or conditions need to be set.
+* Create 1 trigger which acts as the finish line named: DYN_RACE_FINISHTRIGGER. No onActs or conditions need to be set. Should face direction of player heading.
 
 Optional triggers:
 * ["marker_1", "marker_2", ...] call DYN_fnc_CreateExplosion: Create one ore multiple explosions. Explosions are globally saved to prevent multiple players from triggering multiple explosions.
@@ -133,5 +132,6 @@ Made possible by / credits:
 * Team Dynamics: Testing
 * Killzone_Kid: For his help with tons of things. Without him I would have spend a lot more time creating this script.
 * Kronzky: String functions
+* Meatball weather script
 * JoSchaap, JW Custom and many others from arma3 scripting forum: Testing/troubleshooting and help with scripting.
 * Chillroy: Testing

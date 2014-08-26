@@ -4,7 +4,7 @@ private ["_vehicle","_vehicleDir","_weapondirarray","_weaponDirection","_minAllo
 "DYN_fnc_SpawnLocalWeaponDir" call BIS_fnc_Log;
 [] spawn {
 	DYN_RACE_VEHICLE_WEAPON_ALLOWED = true;
-	while{ (DYN_RACE_STATE == "ONGOING") } do 
+	while{ (DYN_RACE_STATE == "ONGOING" && DYN_CAN_SHOOT_BACKWARDS == 0) } do 
 	{
 		if(vehicle player != player) then
 		{
